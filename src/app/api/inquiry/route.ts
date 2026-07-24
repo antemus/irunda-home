@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lalmyznpdqzjshewndyp.supabase.co';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_fundWNwRhexjcTaH31WJ8A_2dsjmFwd';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     const body = await request.json();
     const { name, phone, message, inquiry_type, property_id, property_title } = body;
 
