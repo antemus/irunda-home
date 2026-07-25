@@ -63,6 +63,7 @@ function MapSearchContent() {
 
           return {
             id: item.id,
+            property_no: item.property_no,
             public_title: title,
             masked_address: maskedAddr,
             approx_lat: approx.lat,
@@ -223,9 +224,13 @@ function MapSearchContent() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-[11px] font-extrabold">
-                        {item.property_type || '상가점포'}
+                        {item.property_type || '상가점포'} · {item.transaction_type || '임대'}
                       </span>
-                      <span className="text-xs font-black text-amber-700">{item.transaction_type || '임대'}</span>
+                      {item.property_no && (
+                        <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                          매물번호 {item.property_no}
+                        </span>
+                      )}
                     </div>
 
                     <div>

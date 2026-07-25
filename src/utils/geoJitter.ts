@@ -99,7 +99,6 @@ export function formatSalePrice(val: any): string {
  * 건물명/상호명을 은폐하고 매물 보안 및 가시성을 높이는 보안 제목 생성기
  */
 export function generateSecureTitle(item: any): string {
-  const pNo = item.property_no ? `[${item.property_no}]` : '[추천매물]';
   const sigungu = item.sigungu || '울산';
   const bname = item.bname ? `${item.bname} ` : '';
   const trans = item.transaction_type || '임대';
@@ -110,14 +109,14 @@ export function generateSecureTitle(item: any): string {
   const pyeongStr = areaNum && !isNaN(Number(areaNum)) ? `${Math.round(Number(areaNum) * 0.3025)}평 ` : '';
 
   if (pType.includes('상가') || pType.includes('점포')) {
-    return `${pNo} ${sigungu} ${bname}${pyeongStr}추천 상가 (${trans})`;
+    return `${sigungu} ${bname}${pyeongStr}추천 상가 (${trans})`;
   } else if (pType.includes('오피스텔') || pType.includes('아파트')) {
-    return `${pNo} ${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
+    return `${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
   } else if (pType.includes('원룸') || pType.includes('투룸') || pType.includes('주택')) {
-    return `${pNo} ${sigungu} ${bname}${pyeongStr}인기 주거 매물 (${trans})`;
+    return `${sigungu} ${bname}${pyeongStr}인기 주거 매물 (${trans})`;
   } else if (pType.includes('토지')) {
-    return `${pNo} ${sigungu} ${bname}${pyeongStr}토지 매물 (${trans})`;
+    return `${sigungu} ${bname}${pyeongStr}토지 매물 (${trans})`;
   }
 
-  return `${pNo} ${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
+  return `${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
 }

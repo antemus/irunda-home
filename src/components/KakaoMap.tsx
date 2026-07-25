@@ -5,6 +5,7 @@ import { MapPin, Layers, Building2, Phone, MessageSquare } from 'lucide-react';
 
 export interface MapProperty {
   id: string;
+  property_no?: string;
   public_title?: string;
   masked_address?: string;
   approx_lat?: number;

@@ -363,8 +363,8 @@ export default function HomePage() {
                       {item.transaction_type} · {item.property_type}
                     </span>
                     {item.property_no && (
-                      <span className="text-[11px] font-bold text-slate-400">
-                        {item.property_no}
+                      <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                        매물번호 {item.property_no}
                       </span>
                     )}
                   </div>
