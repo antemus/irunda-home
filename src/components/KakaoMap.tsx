@@ -301,7 +301,7 @@ export default function KakaoMap({
         <MapPin className="w-4 h-4 text-sky-600" />
         <span>울산 전지역 실시간 매물 지도 ({properties.length}건)</span>
         <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-200">
-          🛡️ 가로채기 방지 보안 마커 (가상 200m)
+          🛡️ 위치 보안 마커 (가상 200m)
         </span>
       </div>
     </div>

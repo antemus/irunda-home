@@ -151,7 +151,7 @@ function MapSearchContent() {
 
           <div className="flex items-center gap-2 text-xs text-amber-800 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200 w-full md:w-auto justify-center font-bold">
             <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
-            <span>🛡️ 매물 가로채기 방지 & 정보보호: 지도는 반경 200m 보안 가상 위치로 표시됩니다.</span>
+            <span>🛡️ 위치 보안 & 정보 보호: 지도는 반경 200m 보안 가상 위치로 표시됩니다.</span>
           </div>
         </div>
 
