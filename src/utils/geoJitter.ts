@@ -61,6 +61,41 @@ export function maskAddress(fullAddress: string): string {
 }
 
 /**
+ * 부동산 매매가 포맷터 (억/만원 정밀 변환)
+ * 예: 3 -> 매매가 3억원, 7.5 -> 매매가 7억 5,000만원, 30000 -> 매매가 3억원
+ */
+export function formatSalePrice(val: any): string {
+  if (val === undefined || val === null || val === '') return '매매가 문의';
+  const num = Number(val);
+  if (isNaN(num) || num <= 0) return '매매가 문의';
+
+  // 억 단위 저장된 경우 (예: 3 -> 3억, 7.5 -> 7억 5,000만)
+  if (num < 100) {
+    const uk = Math.floor(num);
+    const remainderMan = Math.round((num - uk) * 10000);
+    if (uk > 0 && remainderMan > 0) {
+      return `매매가 ${uk}억 ${remainderMan.toLocaleString()}만원`;
+    } else if (uk > 0) {
+      return `매매가 ${uk}억원`;
+    } else {
+      return `매매가 ${remainderMan.toLocaleString()}만원`;
+    }
+  }
+
+  // 만원 단위로 크기 저장된 경우 (예: 30000 -> 3억)
+  if (num >= 10000) {
+    const uk = Math.floor(num / 10000);
+    const man = num % 10000;
+    if (man > 0) {
+      return `매매가 ${uk}억 ${man.toLocaleString()}만원`;
+    }
+    return `매매가 ${uk}억원`;
+  }
+
+  return `매매가 ${num.toLocaleString()}만원`;
+}
+
+/**
  * 건물명/상호명을 은폐하고 매물 보안 및 가시성을 높이는 보안 제목 생성기
  */
 export function generateSecureTitle(item: any): string {

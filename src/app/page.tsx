@@ -18,7 +18,7 @@ import {
   Lock,
   MessageSquare,
 } from 'lucide-react';
-import { getApproximateCoordinates, maskAddress, generateSecureTitle } from '@/utils/geoJitter';
+import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 
@@ -80,7 +80,7 @@ export default function HomePage() {
           let formattedPrice = item.price ? String(item.price) : '';
           if (!formattedPrice) {
             if (item.transaction_type === '매매') {
-              formattedPrice = item.sale_price ? `매매가 ${item.sale_price}만원` : '매매가 문의';
+              formattedPrice = formatSalePrice(item.sale_price);
             } else {
               const dep = item.deposit !== undefined && item.deposit !== null ? `${item.deposit}` : '0';
               const rnt = item.rent !== undefined && item.rent !== null ? `${item.rent}` : '0';
