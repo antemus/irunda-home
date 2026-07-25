@@ -12,7 +12,7 @@ export default function InquirySuccessModal({ isOpen, onClose, customerName = 'ê
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 text-center space-y-5 border border-slate-100">
         <button
           onClick={onClose}
@@ -43,7 +43,7 @@ export default function InquirySuccessModal({ isOpen, onClose, customerName = 'ê
 
         <div className="pt-2 flex gap-3">
           <a
-            href="tel:010-8594-8949"
+            href="tel:010-2772-1719"
             className="flex-1 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-semibold text-sm shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 transition-all"
           >
             <PhoneCall className="w-4 h-4" />

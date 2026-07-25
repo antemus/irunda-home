@@ -300,8 +300,8 @@ export default function KakaoMap({
       <div className="absolute top-3 left-3 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-2xl shadow-md border border-slate-200 text-xs font-bold text-slate-800 flex items-center gap-2">
         <MapPin className="w-4 h-4 text-sky-600" />
         <span>울산 전지역 실시간 매물 지도 ({properties.length}건)</span>
-        <span className="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 text-[10px] font-extrabold border border-sky-200">
-          보안 지적 마커
+        <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-200">
+          🛡️ 가로채기 방지 보안 마커 (가상 200m)
         </span>
       </div>
     </div>

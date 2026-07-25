@@ -1,25 +1,34 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert } from 'lucide-react';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert, Lock } from 'lucide-react';
 
 import { getApproximateCoordinates, maskAddress, generateSecureTitle } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 
-export default function MapSearchPage() {
+function MapSearchContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || searchParams.get('search') || '';
+
   const [properties, setProperties] = useState<MapProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState<MapProperty | null>(null);
   const [propertyTypeFilter, setPropertyTypeFilter] = useState('전체');
   const [transactionTypeFilter, setTransactionTypeFilter] = useState('전체');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (initialQuery) {
+      setSearchQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
   useEffect(() => {
     async function fetchProperties() {
       try {
-        // 서버 API Route를 통해 조회 (RLS 우회, service role key 사용)
         const res = await fetch('/api/public-listings');
         if (!res.ok) {
           console.warn('Map fetch error:', res.status);
@@ -142,7 +151,7 @@ export default function MapSearchPage() {
 
           <div className="flex items-center gap-2 text-xs text-amber-800 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200 w-full md:w-auto justify-center font-bold">
             <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
-            <span>울산 지도는 매물 가로채기 방지를 위해 가상 위치(반경 200~300m 부근)로 표시됩니다.</span>
+            <span>🛡️ 매물 가로채기 방지 & 정보보호: 지도는 반경 200m 보안 가상 위치로 표시됩니다.</span>
           </div>
         </div>
 
@@ -167,6 +176,23 @@ export default function MapSearchPage() {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {/* Secret Listings Alluring Callout Banner */}
+              <div className="p-3.5 bg-gradient-to-r from-amber-500/10 via-amber-50 to-sky-50 rounded-2xl border border-amber-200 text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-black text-slate-900">
+                  <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>웹사이트 미공개 비밀 매물 다량 보유 🤫</span>
+                </div>
+                <p className="text-slate-600 text-[11px] leading-snug">
+                  온라인 미공개 울산 A급 상가 및 급매 아파트 매물이 준비되어 있습니다. 전화 1:1 상담으로 조건 맞춤 비밀 매물을 확인하세요.
+                </p>
+                <a
+                  href="tel:010-2772-1719"
+                  className="block text-center py-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-extrabold rounded-xl text-[11px] transition-all"
+                >
+                  📞 비밀 매물 전화 문의 (010-2772-1719)
+                </a>
+              </div>
+
               {loading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((n) => (
@@ -174,9 +200,15 @@ export default function MapSearchPage() {
                   ))}
                 </div>
               ) : filteredProperties.length === 0 ? (
-                <div className="text-center py-16 space-y-3 text-slate-400">
+                <div className="text-center py-12 space-y-3 text-slate-400">
                   <Building2 className="w-10 h-10 mx-auto text-slate-300" />
-                  <p className="text-xs font-bold">조건에 맞는 매물이 없습니다.</p>
+                  <p className="text-xs font-bold">조건에 맞는 검색 매물이 없습니다.</p>
+                  <button
+                    onClick={() => setIsInquiryModalOpen(true)}
+                    className="px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold shadow-md"
+                  >
+                    1:1 맞춤 매물 구하기 문의
+                  </button>
                 </div>
               ) : (
                 filteredProperties.map((item) => (
@@ -242,7 +274,7 @@ export default function MapSearchPage() {
                     1:1 문의하기
                   </button>
                   <a
-                    href="tel:010-8594-8949"
+                    href="tel:010-2772-1719"
                     className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-extrabold flex items-center gap-1"
                   >
                     <Phone className="w-3.5 h-3.5" />
@@ -262,5 +294,13 @@ export default function MapSearchPage() {
         propertyId={selectedProperty?.id}
       />
     </div>
+  );
+}
+
+export default function MapSearchPage() {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-sm font-bold text-slate-500">지도 매물을 불러오는 중...</div>}>
+      <MapSearchContent />
+    </Suspense>
   );
 }

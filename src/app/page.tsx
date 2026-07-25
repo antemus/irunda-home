@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   MapPin,
   Search,
@@ -14,6 +15,8 @@ import {
   Layers,
   CheckCircle2,
   FileSpreadsheet,
+  Lock,
+  MessageSquare,
 } from 'lucide-react';
 import { getApproximateCoordinates, maskAddress, generateSecureTitle } from '@/utils/geoJitter';
 
@@ -40,12 +43,13 @@ export default function HomePage() {
   const [properties, setProperties] = useState<PropertyItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState('전체');
+  const [heroSearch, setHeroSearch] = useState('');
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchPublicListings() {
       try {
-        // 서버 API Route를 통해 조회 (RLS 우회, service role key 사용)
         const res = await fetch('/api/public-listings');
         if (!res.ok) {
           console.warn('Failed to fetch public listings:', res.status);
@@ -96,15 +100,14 @@ export default function HomePage() {
             pyeong_price: item.pyeong_price || (item.sale_price && item.land_area ? Math.round(Number(item.sale_price) / (Number(item.land_area) * 0.3025)) : undefined),
             property_type: item.property_type || '상가점포',
             transaction_type: item.transaction_type || '임대',
-            area: item.exclusive_area || item.contract_area || item.land_area || '-',
-            images: item.images || [],
+            area: item.exclusive_area || item.contract_area || item.land_area,
             created_at: item.created_at,
           };
         });
 
         setProperties(mappedItems);
       } catch (err: any) {
-        console.warn('Handled fetch error:', err?.message || 'Query executed cleanly');
+        console.warn('Query status:', err?.message || 'Handled');
         setProperties([]);
       } finally {
         setLoading(false);
@@ -113,6 +116,15 @@ export default function HomePage() {
 
     fetchPublicListings();
   }, []);
+
+  const handleHeroSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (heroSearch.trim()) {
+      router.push(`/map?q=${encodeURIComponent(heroSearch.trim())}`);
+    } else {
+      router.push('/map');
+    }
+  };
 
   const filteredProperties = properties.filter((p) => {
     if (selectedType === '전체') return true;
@@ -146,23 +158,25 @@ export default function HomePage() {
           </p>
 
           {/* Search Box */}
-          <div className="max-w-3xl mx-auto bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-slate-200 text-slate-900 flex flex-col sm:flex-row items-center gap-3">
+          <form onSubmit={handleHeroSearchSubmit} className="max-w-3xl mx-auto bg-white p-3 sm:p-4 rounded-3xl shadow-2xl border border-slate-200 text-slate-900 flex flex-col sm:flex-row items-center gap-3">
             <div className="flex-1 w-full relative">
               <MapPin className="w-5 h-5 text-sky-600 absolute left-4 top-3.5" />
               <input
                 type="text"
+                value={heroSearch}
+                onChange={(e) => setHeroSearch(e.target.value)}
                 placeholder="지역명, 상가, 아파트명 검색 (예: 삼산동 상가, C1415)"
                 className="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm font-semibold"
               />
             </div>
-            <Link
-              href="/map"
+            <button
+              type="submit"
               className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-2xl font-extrabold text-sm shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
             >
               <Search className="w-4 h-4" />
               지도 매물 탐색
-            </Link>
-          </div>
+            </button>
+          </form>
 
           {/* Metric Stats Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-4xl mx-auto pt-8 border-t border-white/10 text-white">
@@ -228,9 +242,9 @@ export default function HomePage() {
             </div>
 
             <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
-              안녕하세요. 이룬다 공인중개사사무소 대표 **장혜경 소장**입니다. <br />
-              울산 전지역의 **상가·점포 정밀 입지 분석**부터 **아파트·오피스텔 매매/임대**까지, 
-              직접 현장을 확인한 **100% 검증 실매물**만을 엄선하여 최고의 만족을 선사합니다.
+              안녕하세요. 이룬다 공인중개사사무소 대표 <strong>장혜경 소장</strong>입니다. <br />
+              울산 전지역의 <strong>상가·점포 정밀 입지 분석</strong>부터 <strong>아파트·오피스텔 매매/임대</strong>까지, 
+              직접 현장을 확인한 <strong>100% 검증 실매물</strong>만을 엄선하여 최고의 만족을 선사합니다.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
@@ -240,50 +254,75 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 shadow-sm whitespace-nowrap">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                아파트 · 오피스텔 맞춤 중개
+                아파트 · 오피스텔 매물
               </div>
               <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 shadow-sm whitespace-nowrap">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                위치 보안 & 개인정보 보호
+                위치 보안 & 정보 보호
               </div>
-            </div>
-
-            <div className="pt-4 flex items-center gap-4">
-              <Link
-                href="/about"
-                className="px-6 py-3.5 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-sky-600/25 flex items-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
-              >
-                장혜경 소장 프로필 & 사무소 안내
-                <ArrowRight className="w-4 h-4" />
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Properties Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-sky-700 text-xs font-bold uppercase tracking-wider mb-2">
-              <Layers className="w-4 h-4" />
-              추천 주요 매물
+      {/* Secret / Off-Market Listings Alluring Banner (Item 5) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-br from-amber-500/10 via-amber-50 to-sky-50 rounded-3xl p-8 sm:p-10 border-2 border-amber-300/80 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2.5 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-xs shadow-sm">
+              <Lock className="w-4 h-4" />
+              <span>비공개 비밀 매물 다량 보유 🤫</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black text-slate-900">
-              이룬다 추천 우수 매물 ({filteredProperties.length}건)
+            <h3 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              온라인에 공개되지 않은 <span className="text-sky-700">비밀 실매물</span>이 다수 대기 중입니다!
+            </h3>
+            <p className="text-slate-600 text-xs sm:text-sm max-w-2xl leading-relaxed">
+              임대인 및 매도인의 보안 요청으로 웹사이트에 노출되지 않은 <strong>울산 A급 핵심 상권, 무권리/소액권리 상가, 급매 아파트</strong>가 다수 준비되어 있습니다. 
+              전화 상담 또는 1:1 간편 문의를 통해 맞춤 비밀 매물을 즉시 안내받으세요.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+            <button
+              onClick={() => setIsInquiryOpen(true)}
+              className="px-6 py-3.5 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold rounded-2xl shadow-md text-xs sm:text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
+            >
+              <MessageSquare className="w-4 h-4" />
+              비밀 매물 1:1 문의
+            </button>
+            <a
+              href="tel:010-2772-1719"
+              className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-2xl shadow-md text-xs sm:text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
+            >
+              <Phone className="w-4 h-4 text-amber-400" />
+              010-2772-1719
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Recommended Public Listings Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
+          <div className="space-y-2">
+            <span className="text-xs font-bold tracking-wider text-sky-600 uppercase">RECOMMENDED PROPERTIES</span>
+            <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              이룬다 추천 대표 실매물
             </h2>
+            <p className="text-slate-500 text-xs sm:text-sm">
+              울산 지역 현장 실사를 거친 검증 실매물 목록입니다.
+            </p>
           </div>
 
           {/* Type Filter Buttons */}
-          <div className="flex items-center gap-1.5 bg-slate-200 p-1.5 rounded-2xl border border-slate-300 text-xs font-bold overflow-x-auto max-w-full">
+          <div className="flex flex-wrap gap-2 bg-slate-200/80 p-1.5 rounded-2xl">
             {['전체', '상가/점포', '아파트/오피스텔', '주택', '토지'].map((type) => (
               <button
                 key={type}
                 onClick={() => setSelectedType(type)}
-                className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap ${
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
                   selectedType === type
-                    ? 'bg-sky-600 text-white shadow-md font-extrabold'
-                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'bg-white text-sky-700 shadow-md'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {type}
@@ -294,47 +333,47 @@ export default function HomePage() {
 
         {/* Listings Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="h-80 bg-white border border-slate-200 animate-pulse rounded-3xl shadow-sm" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="h-96 bg-slate-200/60 animate-pulse rounded-3xl border border-slate-200" />
             ))}
           </div>
         ) : filteredProperties.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 space-y-4 shadow-sm">
-            <Building2 className="w-12 h-12 text-slate-400 mx-auto" />
-            <p className="text-slate-600 font-bold text-sm">등록된 공개 매물이 준비 중입니다.</p>
-            <button
-              onClick={() => setIsInquiryOpen(true)}
-              className="px-5 py-2.5 bg-sky-600 text-white rounded-xl font-extrabold text-xs shadow-md shadow-sky-600/25 whitespace-nowrap"
-            >
-              희망 조건 매물 문의하기
-            </button>
+          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 space-y-4">
+            <Building2 className="w-12 h-12 text-slate-300 mx-auto" />
+            <h3 className="text-lg font-bold text-slate-700">해당 유형의 등록된 매물이 준비 중입니다.</h3>
+            <p className="text-xs text-slate-500">지도를 방문하시거나 빠른 문의를 남겨주시면 맞춰 안내해 드립니다.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-3xl border border-slate-200/90 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1"
               >
                 <div className="p-6 space-y-4">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-extrabold whitespace-nowrap">
-                      {item.property_type || '상가점포'}
+                    <span className="px-3 py-1 bg-sky-50 text-sky-700 rounded-full text-[11px] font-extrabold border border-sky-200 whitespace-nowrap">
+                      {item.transaction_type} · {item.property_type}
                     </span>
-                    <span className="text-xs font-black text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 whitespace-nowrap">
-                      {item.transaction_type || '임대'}
-                    </span>
+                    {item.property_no && (
+                      <span className="text-[11px] font-bold text-slate-400">
+                        {item.property_no}
+                      </span>
+                    )}
                   </div>
 
-                  <div>
-                    <h3 className="text-lg font-black text-slate-900 line-clamp-1">
-                      {item.public_title || '울산 추천 우수 매물'}
-                    </h3>
-                    <p className="text-xs font-semibold text-slate-500 mt-1 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-                      {item.masked_address || '울산 지역 위치 보안 적용'}
-                    </p>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-sky-700 transition-colors line-clamp-2 leading-snug">
+                    {item.public_title}
+                  </h3>
+
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {item.public_description}
+                  </p>
+
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+                    <MapPin className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                    <span>{item.masked_address}</span>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5 text-xs">

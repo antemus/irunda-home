@@ -61,7 +61,7 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-sky-700 to-sky-600 px-6 py-5 text-white flex items-center justify-between">

@@ -16,8 +16,9 @@ export default function AboutPage() {
             <UserCheck className="w-4 h-4 text-sky-600" />
             대표 공인중개사 소개 · irunda.co.kr
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-            울산 부동산, 신뢰와 정직으로 가치를 이룹니다
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight [word-break:keep-all] break-keep">
+            울산 부동산, <br className="hidden sm:inline" />
+            신뢰와 정직으로 가치를 이룹니다
           </h1>
           <p className="text-slate-600 text-base leading-relaxed">
             이룬다 공인중개사사무소는 울산 전지역 상가·점포 정밀 상권분석 및 아파트·오피스텔 100% 실매물로 고객님의 부동산 거래를 안전하게 책임집니다.
