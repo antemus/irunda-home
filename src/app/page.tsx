@@ -18,7 +18,7 @@ import {
   Lock,
   MessageSquare,
 } from 'lucide-react';
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice } from '@/utils/geoJitter';
+import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 
@@ -93,7 +93,7 @@ export default function HomePage() {
             id: item.id,
             property_no: item.property_no,
             public_title: title,
-            public_description: (item.etc && item.etc !== 'null') ? item.etc : (item.current_status && item.current_status !== 'null') ? item.current_status : '울산 지역 현장 실사를 거친 검증 실매물입니다.',
+            public_description: getPublicDescription(item),
             masked_address: maskedAddr,
             approx_lat: approx.lat,
             approx_lng: approx.lng,

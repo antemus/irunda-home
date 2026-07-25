@@ -69,7 +69,6 @@ export function formatSalePrice(val: any): string {
   const num = Number(val);
   if (isNaN(num) || num <= 0) return '매매가 문의';
 
-  // 억 단위 저장된 경우 (예: 3 -> 3억, 7.5 -> 7억 5,000만)
   if (num < 100) {
     const uk = Math.floor(num);
     const remainderMan = Math.round((num - uk) * 10000);
@@ -82,7 +81,6 @@ export function formatSalePrice(val: any): string {
     }
   }
 
-  // 만원 단위로 크기 저장된 경우 (예: 30000 -> 3억)
   if (num >= 10000) {
     const uk = Math.floor(num / 10000);
     const man = num % 10000;
@@ -93,6 +91,26 @@ export function formatSalePrice(val: any): string {
   }
 
   return `매매가 ${num.toLocaleString()}만원`;
+}
+
+/**
+ * 매물설명 (Description) 전용 추출기
+ * features(매물특징 - 비공개/메모)를 전면 제외하고 current_status 및 etc (공개 매물설명)를 1순위로 추출합니다.
+ */
+export function getPublicDescription(item: any): string {
+  // 1. current_status (Land CRM 매물설명)
+  if (item.current_status && item.current_status !== 'null' && item.current_status.trim()) {
+    return item.current_status.trim();
+  }
+  // 2. etc (홍보/상세 매물설명)
+  if (item.etc && item.etc !== 'null' && item.etc.trim()) {
+    const lines = item.etc
+      .split('\n')
+      .map((l: string) => l.trim())
+      .filter((l: string) => l && !l.startsWith('===') && !l.startsWith('매물번호') && !l.startsWith('🏢') && !l.startsWith('이룬다부동산'));
+    if (lines.length > 0) return lines[0];
+  }
+  return '울산 지역 현장 실사를 거친 검증 실매물입니다.';
 }
 
 /**
