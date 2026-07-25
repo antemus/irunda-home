@@ -93,7 +93,7 @@ export function formatSalePrice(val: any): string {
 }
 
 /**
- * 전체 매물 가격 종합 포맷터 (0원 시 '문의'로 표시)
+ * 전체 매물 가격 종합 포맷터 (권리금 표기 완전 제외)
  */
 export function formatPropertyPrice(item: any): string {
   if (item.transaction_type === '매매') {
@@ -102,33 +102,23 @@ export function formatPropertyPrice(item: any): string {
 
   const depNum = Number(item.deposit);
   const rntNum = Number(item.rent);
-  const premNum = Number(item.premium);
 
   const hasDep = !isNaN(depNum) && depNum > 0;
   const hasRnt = !isNaN(rntNum) && rntNum > 0;
-  const hasPrem = !isNaN(premNum) && premNum > 0;
 
   if (!hasDep && !hasRnt) {
-    let result = '임대료 문의';
-    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
-    return result;
+    return '임대료 문의';
   }
 
   if (hasDep && !hasRnt) {
-    let result = `보증금 ${depNum.toLocaleString()}만원 / 월세 문의`;
-    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
-    return result;
+    return `보증금 ${depNum.toLocaleString()}만원 / 월세 문의`;
   }
 
   if (!hasDep && hasRnt) {
-    let result = `보증금 문의 / 월 ${rntNum.toLocaleString()}만원`;
-    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
-    return result;
+    return `보증금 문의 / 월 ${rntNum.toLocaleString()}만원`;
   }
 
-  let result = `보증금 ${depNum.toLocaleString()}만 / 월 ${rntNum.toLocaleString()}만원`;
-  if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
-  return result;
+  return `보증금 ${depNum.toLocaleString()}만 / 월 ${rntNum.toLocaleString()}만원`;
 }
 
 /**
