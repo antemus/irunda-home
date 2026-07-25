@@ -2,11 +2,12 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert, Lock } from 'lucide-react';
+import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert, Lock, FileText } from 'lucide-react';
 
 import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
+import PropertyDetailModal from '@/components/PropertyDetailModal';
 
 function MapSearchContent() {
   const searchParams = useSearchParams();
@@ -19,6 +20,7 @@ function MapSearchContent() {
   const [transactionTypeFilter, setTransactionTypeFilter] = useState('전체');
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+  const [selectedPropertyForDetail, setSelectedPropertyForDetail] = useState<MapProperty | null>(null);
 
   useEffect(() => {
     if (initialQuery) {
@@ -66,6 +68,7 @@ function MapSearchContent() {
             property_no: item.property_no,
             public_title: title,
             public_description: getPublicDescription(item),
+            etc: item.etc && item.etc !== 'null' ? item.etc : undefined,
             masked_address: maskedAddr,
             approx_lat: approx.lat,
             approx_lng: approx.lng,
@@ -249,20 +252,35 @@ function MapSearchContent() {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100 gap-2">
                       <span className="font-black text-sky-700 text-base">
                         {item.price ? `${item.price}` : '가격 문의'}
                       </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedProperty(item);
-                          setIsInquiryModalOpen(true);
-                        }}
-                        className="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-extrabold text-[11px] shadow-sm transition-all"
-                      >
-                        상세 문의
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        {item.etc && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPropertyForDetail(item);
+                            }}
+                            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-[11px] transition-all flex items-center gap-1"
+                            title="상세설명 팝업"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-sky-600" />
+                            설명
+                          </button>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProperty(item);
+                            setIsInquiryModalOpen(true);
+                          }}
+                          className="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-extrabold text-[11px] shadow-sm transition-all"
+                        >
+                          상세 문의
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -277,6 +295,15 @@ function MapSearchContent() {
                 </div>
                 <h4 className="text-sm font-extrabold truncate">{selectedProperty.public_title}</h4>
                 <div className="flex gap-2">
+                  {selectedProperty.etc && (
+                    <button
+                      onClick={() => setSelectedPropertyForDetail(selectedProperty)}
+                      className="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold flex items-center gap-1"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-amber-400" />
+                      상세설명
+                    </button>
+                  )}
                   <button
                     onClick={() => setIsInquiryModalOpen(true)}
                     className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1 shadow-md shadow-sky-600/20"
@@ -303,6 +330,18 @@ function MapSearchContent() {
         onClose={() => setIsInquiryModalOpen(false)}
         propertyTitle={selectedProperty?.public_title}
         propertyId={selectedProperty?.id}
+      />
+
+      <PropertyDetailModal
+        isOpen={!!selectedPropertyForDetail}
+        onClose={() => setSelectedPropertyForDetail(null)}
+        property={selectedPropertyForDetail}
+        onOpenInquiry={() => {
+          if (selectedPropertyForDetail) {
+            setSelectedProperty(selectedPropertyForDetail);
+            setIsInquiryModalOpen(true);
+          }
+        }}
       />
     </div>
   );

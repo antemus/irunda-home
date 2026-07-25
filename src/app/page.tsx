@@ -17,16 +17,19 @@ import {
   FileSpreadsheet,
   Lock,
   MessageSquare,
+  FileText,
 } from 'lucide-react';
 import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
+import PropertyDetailModal from '@/components/PropertyDetailModal';
 
 export interface PropertyItem {
   id: string;
   property_no?: string;
   public_title?: string;
   public_description?: string;
+  etc?: string;
   masked_address?: string;
   approx_lat?: number;
   approx_lng?: number;
@@ -46,6 +49,7 @@ export default function HomePage() {
   const [heroSearch, setHeroSearch] = useState('');
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [selectedPropertyForInquiry, setSelectedPropertyForInquiry] = useState<PropertyItem | null>(null);
+  const [selectedPropertyForDetail, setSelectedPropertyForDetail] = useState<PropertyItem | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -94,6 +98,7 @@ export default function HomePage() {
             property_no: item.property_no,
             public_title: title,
             public_description: getPublicDescription(item),
+            etc: item.etc && item.etc !== 'null' ? item.etc : undefined,
             masked_address: maskedAddr,
             approx_lat: approx.lat,
             approx_lng: approx.lng,
@@ -373,11 +378,22 @@ export default function HomePage() {
                     {item.public_title}
                   </h3>
 
-                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                    {item.public_description}
-                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      {item.public_description}
+                    </p>
+                    {item.etc && (
+                      <button
+                        onClick={() => setSelectedPropertyForDetail(item)}
+                        className="inline-flex items-center gap-1 text-[11px] font-extrabold text-sky-700 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-200/80 transition-all mt-1"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-sky-600" />
+                        상세설명 전체보기 팝업
+                      </button>
+                    )}
+                  </div>
 
-                  <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium pt-1">
                     <MapPin className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                     <span>{item.masked_address}</span>
                   </div>
@@ -402,10 +418,20 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="px-6 pb-6 pt-2 border-t border-slate-100">
+                <div className="px-6 pb-6 pt-2 border-t border-slate-100 flex gap-2">
+                  {item.etc && (
+                    <button
+                      onClick={() => setSelectedPropertyForDetail(item)}
+                      className="px-3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 shrink-0"
+                      title="상세설명 팝업 보기"
+                    >
+                      <FileText className="w-4 h-4 text-sky-700" />
+                      설명보기
+                    </button>
+                  )}
                   <button
                     onClick={() => handleOpenPropertyInquiry(item)}
-                    className="w-full py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-xl font-extrabold text-xs shadow-md shadow-sky-600/20 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-xl font-extrabold text-xs shadow-md shadow-sky-600/20 transition-all flex items-center justify-center gap-2"
                   >
                     상세 문의하기
                   </button>
@@ -458,6 +484,17 @@ export default function HomePage() {
         }}
         propertyTitle={selectedPropertyForInquiry?.public_title}
         propertyId={selectedPropertyForInquiry?.id}
+      />
+
+      <PropertyDetailModal
+        isOpen={!!selectedPropertyForDetail}
+        onClose={() => setSelectedPropertyForDetail(null)}
+        property={selectedPropertyForDetail}
+        onOpenInquiry={() => {
+          if (selectedPropertyForDetail) {
+            handleOpenPropertyInquiry(selectedPropertyForDetail);
+          }
+        }}
       />
     </div>
   );
