@@ -57,11 +57,11 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-slate-400">
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-sky-400 shrink-0" />
-                대표전화: 010-8594-8949
+                대표전화: 010-2772-1719
               </p>
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                사무소 위치: 울산광역시 전지역 중개
+                사무소 위치: 울산 남구 화합로148번길 12 1층
               </p>
               <p className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-sky-400 shrink-0" />

@@ -12,7 +12,7 @@ export default function FloatingContactBar() {
       <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-white/90 backdrop-blur-md border-t border-slate-200/80 shadow-lg md:hidden">
         <div className="flex items-center gap-2 max-w-md mx-auto">
           <a
-            href="tel:010-8594-8949"
+            href="tel:010-2772-1719"
             className="flex-1 py-3 bg-gradient-to-r from-sky-600 to-sky-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/20 active:scale-95 transition-transform"
           >
             <Phone className="w-4 h-4" />

@@ -75,7 +75,7 @@ export default function Header() {
                 빠른 문의
               </button>
               <a
-                href="tel:010-8594-8949"
+                href="tel:010-2772-1719"
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center gap-2 hover:scale-105"
               >
                 <Phone className="w-4 h-4" />
@@ -139,11 +139,11 @@ export default function Header() {
             </Link>
             <div className="pt-2 border-t border-slate-100">
               <a
-                href="tel:010-8594-8949"
+                href="tel:010-2772-1719"
                 className="w-full py-3 rounded-xl bg-sky-600 text-white font-extrabold text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-sky-600/20"
               >
                 <Phone className="w-4 h-4" />
-                전화 연결 (010-8594-8949)
+                전화 연결 (010-2772-1719)
               </a>
             </div>
           </div>

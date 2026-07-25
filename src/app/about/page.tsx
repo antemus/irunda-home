@@ -108,11 +108,11 @@ export default function AboutPage() {
                 장혜경 소장 1:1 상담 신청
               </button>
               <a
-                href="tel:010-8594-8949"
+                href="tel:010-2772-1719"
                 className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center gap-2"
               >
                 <Phone className="w-4 h-4 text-sky-400" />
-                010-8594-8949
+                010-2772-1719
               </a>
             </div>
           </div>
@@ -127,6 +127,7 @@ export default function AboutPage() {
             <h3 className="text-base font-bold text-slate-900">중개사무소 정보</h3>
             <p className="text-xs font-medium text-slate-600">상호: 이룬다 공인중개사사무소</p>
             <p className="text-xs font-semibold text-slate-800">대표: 장혜경 대표 공인중개사 (소장)</p>
+            <p className="text-xs font-medium text-slate-600">주소: 울산 남구 화합로148번길 12 1층</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-3">
