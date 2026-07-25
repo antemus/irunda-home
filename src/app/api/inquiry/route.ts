@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { validateInquiry } from '@/utils/inquiryValidation';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,15 +70,20 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, phone, message, inquiry_type, property_id, property_title } = body;
 
-    if (!name || !phone) {
-      return NextResponse.json({ error: '성함과 연락처는 필수입니다.' }, { status: 400 });
+    // 백엔드 유효성 검사 및 스팸 필터링
+    const validation = validateInquiry(name, phone, message);
+    if (!validation.isValid) {
+      return NextResponse.json({ error: validation.errorMessage || '입력값이 올바르지 않습니다.' }, { status: 400 });
     }
+
+    const cleanName = validation.cleanName || name.trim();
+    const cleanPhone = validation.cleanPhone || phone.trim();
 
     const { data, error } = await supabase.from('public_inquiries').insert([
       {
-        name,
-        phone,
-        message: message || null,
+        name: cleanName,
+        phone: cleanPhone,
+        message: message ? message.trim() : null,
         inquiry_type: inquiry_type || 'general',
         property_id: property_id || null,
         property_title: property_title || null,
@@ -92,8 +98,8 @@ export async function POST(request: Request) {
 
     // 휴대폰 실시간 알림 발송 실행
     await sendMobileNotification({
-      name,
-      phone,
+      name: cleanName,
+      phone: cleanPhone,
       message,
       inquiry_type,
       property_title,

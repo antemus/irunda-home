@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Send, Phone, User, MessageSquare, Lock } from 'lucide-react';
 import InquirySuccessModal from './InquirySuccessModal';
+import { validateInquiry, formatPhoneNumber } from '@/utils/inquiryValidation';
 
 interface QuickInquiryModalProps {
   isOpen: boolean;
@@ -21,10 +22,18 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
 
   if (!isOpen && !isSuccessOpen) return null;
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setPhone(formatPhoneNumber(val));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) {
-      alert('성함과 연락처를 입력해 주세요.');
+
+    // 입력값 유효성 및 스팸 필터링 검사
+    const validation = validateInquiry(name, phone, message);
+    if (!validation.isValid) {
+      alert(validation.errorMessage);
       return;
     }
 
@@ -35,8 +44,8 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: name.trim(),
-          phone: phone.trim(),
+          name: validation.cleanName,
+          phone: validation.cleanPhone,
           message: message.trim(),
           inquiry_type: propertyTitle ? 'property_inquiry' : inquiryType,
           property_id: propertyId || null,
@@ -45,14 +54,15 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
       });
 
       if (!res.ok) {
-        throw new Error('문의 등록 실패');
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || '문의 등록 실패');
       }
 
       onClose();
       setIsSuccessOpen(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('문의 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      alert(err.message || '문의 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
     } finally {
       setIsSubmitting(false);
     }
@@ -90,10 +100,11 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
                   <input
                     type="text"
                     required
+                    minLength={2}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="홍길동"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
+                    placeholder="홍길동 (2자 이상)"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm font-semibold"
                   />
                 </div>
               </div>
@@ -106,9 +117,9 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
                     type="tel"
                     required
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={handlePhoneChange}
                     placeholder="010-1234-5678"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm font-semibold"
                   />
                 </div>
               </div>
@@ -119,7 +130,7 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
                   <select
                     value={inquiryType}
                     onChange={(e) => setInquiryType(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm bg-white"
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm bg-white font-semibold"
                   >
                     <option value="general">일반 상담 / 매물 찾기</option>
                     <option value="submit_property">매물 내놓기 (매도/임대)</option>
@@ -143,9 +154,9 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100 font-medium">
                 <Lock className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-                <span>고객님의 개인정보는 상담 목적으로만 안전하게 사용됩니다.</span>
+                <span>고객님의 개인정보는 상담 목적으로만 안전하게 보호됩니다.</span>
               </div>
 
               <button
