@@ -368,20 +368,9 @@ export default function HomePage() {
                     {item.public_title}
                   </h3>
 
-                  <div className="space-y-1.5">
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                      {item.public_description}
-                    </p>
-                    {item.etc && (
-                      <button
-                        onClick={() => setSelectedPropertyForDetail(item)}
-                        className="inline-flex items-center gap-1 text-[11px] font-extrabold text-sky-700 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-200/80 transition-all mt-1"
-                      >
-                        <FileText className="w-3.5 h-3.5 text-sky-600" />
-                        상세설명 전체보기 팝업
-                      </button>
-                    )}
-                  </div>
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {item.public_description}
+                  </p>
 
                   <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium pt-1">
                     <MapPin className="w-3.5 h-3.5 text-sky-600 shrink-0" />
