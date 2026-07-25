@@ -19,7 +19,7 @@ import {
   MessageSquare,
   FileText,
 } from 'lucide-react';
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription } from '@/utils/geoJitter';
+import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyDetailModal from '@/components/PropertyDetailModal';
@@ -81,17 +81,7 @@ export default function HomePage() {
 
           const title = generateSecureTitle(item);
 
-          let formattedPrice = item.price ? String(item.price) : '';
-          if (!formattedPrice) {
-            if (item.transaction_type === '매매') {
-              formattedPrice = formatSalePrice(item.sale_price);
-            } else {
-              const dep = item.deposit !== undefined && item.deposit !== null ? `${item.deposit}` : '0';
-              const rnt = item.rent !== undefined && item.rent !== null ? `${item.rent}` : '0';
-              formattedPrice = `보증금 ${dep} / 월 ${rnt}만원`;
-              if (item.premium) formattedPrice += ` (권리금 ${item.premium}만)`;
-            }
-          }
+          const formattedPrice = formatPropertyPrice(item);
 
           return {
             id: item.id,

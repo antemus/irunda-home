@@ -61,8 +61,7 @@ export function maskAddress(fullAddress: string): string {
 }
 
 /**
- * 부동산 매매가 포맷터 (억/만원 정밀 변환)
- * 예: 3 -> 매매가 3억원, 7.5 -> 매매가 7억 5,000만원, 30000 -> 매매가 3억원
+ * 부동산 매매가 포맷터 (억/만원 정밀 변환, 0원 처리)
  */
 export function formatSalePrice(val: any): string {
   if (val === undefined || val === null || val === '') return '매매가 문의';
@@ -94,15 +93,51 @@ export function formatSalePrice(val: any): string {
 }
 
 /**
+ * 전체 매물 가격 종합 포맷터 (0원 시 '문의'로 표시)
+ */
+export function formatPropertyPrice(item: any): string {
+  if (item.transaction_type === '매매') {
+    return formatSalePrice(item.sale_price);
+  }
+
+  const depNum = Number(item.deposit);
+  const rntNum = Number(item.rent);
+  const premNum = Number(item.premium);
+
+  const hasDep = !isNaN(depNum) && depNum > 0;
+  const hasRnt = !isNaN(rntNum) && rntNum > 0;
+  const hasPrem = !isNaN(premNum) && premNum > 0;
+
+  if (!hasDep && !hasRnt) {
+    let result = '임대료 문의';
+    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
+    return result;
+  }
+
+  if (hasDep && !hasRnt) {
+    let result = `보증금 ${depNum.toLocaleString()}만원 / 월세 문의`;
+    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
+    return result;
+  }
+
+  if (!hasDep && hasRnt) {
+    let result = `보증금 문의 / 월 ${rntNum.toLocaleString()}만원`;
+    if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
+    return result;
+  }
+
+  let result = `보증금 ${depNum.toLocaleString()}만 / 월 ${rntNum.toLocaleString()}만원`;
+  if (hasPrem) result += ` (권리금 ${premNum.toLocaleString()}만)`;
+  return result;
+}
+
+/**
  * 매물설명 (Description) 전용 추출기
- * features(매물특징 - 비공개/메모)를 전면 제외하고 current_status 및 etc (공개 매물설명)를 1순위로 추출합니다.
  */
 export function getPublicDescription(item: any): string {
-  // 1. current_status (Land CRM 매물설명)
   if (item.current_status && item.current_status !== 'null' && item.current_status.trim()) {
     return item.current_status.trim();
   }
-  // 2. etc (홍보/상세 매물설명)
   if (item.etc && item.etc !== 'null' && item.etc.trim()) {
     const lines = item.etc
       .split('\n')
