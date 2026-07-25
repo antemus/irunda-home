@@ -83,21 +83,14 @@ export default function Header() {
               </a>
             </div>
 
-            {/* Mobile Menu Toggle */}
-            <div className="flex md:hidden items-center gap-2">
-              <button
-                onClick={() => setIsInquiryModalOpen(true)}
-                className="px-3.5 py-2 rounded-xl bg-sky-600 text-white font-extrabold text-xs flex items-center gap-1 shadow-md shadow-sky-600/25"
-              >
-                <MessageSquare className="w-3.5 h-3.5" />
-                문의
-              </button>
+            {/* Mobile Menu Toggle (3-line menu icon only) */}
+            <div className="flex md:hidden items-center">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 rounded-xl text-slate-700 hover:bg-slate-100"
+                className="p-2.5 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
                 aria-label="메뉴 열기"
               >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
               </button>
             </div>
           </div>
