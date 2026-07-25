@@ -64,7 +64,7 @@ export function maskAddress(fullAddress: string): string {
  * 건물명/상호명을 은폐하고 매물 보안 및 가시성을 높이는 보안 제목 생성기
  */
 export function generateSecureTitle(item: any): string {
-  const pNo = item.property_no ? `[매물 ${item.property_no}]` : '[추천매물]';
+  const pNo = item.property_no ? `[${item.property_no}]` : '[추천매물]';
   const sigungu = item.sigungu || '울산';
   const bname = item.bname ? `${item.bname} ` : '';
   const trans = item.transaction_type || '임대';

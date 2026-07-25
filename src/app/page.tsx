@@ -45,6 +45,7 @@ export default function HomePage() {
   const [selectedType, setSelectedType] = useState('전체');
   const [heroSearch, setHeroSearch] = useState('');
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const [selectedPropertyForInquiry, setSelectedPropertyForInquiry] = useState<PropertyItem | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -132,6 +133,11 @@ export default function HomePage() {
     if (selectedType === '아파트/오피스텔') return (p.property_type || '').includes('아파트') || (p.property_type || '').includes('오피스텔');
     return p.property_type === selectedType;
   });
+
+  const handleOpenPropertyInquiry = (item?: PropertyItem) => {
+    setSelectedPropertyForInquiry(item || null);
+    setIsInquiryOpen(true);
+  };
 
   return (
     <div className="space-y-16 pb-20 bg-slate-50 min-h-screen">
@@ -265,7 +271,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Secret / Off-Market Listings Alluring Banner (Item 5) */}
+      {/* Secret / Off-Market Listings Alluring Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-br from-amber-500/10 via-amber-50 to-sky-50 rounded-3xl p-8 sm:p-10 border-2 border-amber-300/80 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2.5 text-center md:text-left">
@@ -283,7 +289,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
             <button
-              onClick={() => setIsInquiryOpen(true)}
+              onClick={() => handleOpenPropertyInquiry()}
               className="px-6 py-3.5 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold rounded-2xl shadow-md text-xs sm:text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
             >
               <MessageSquare className="w-4 h-4" />
@@ -398,7 +404,7 @@ export default function HomePage() {
 
                 <div className="px-6 pb-6 pt-2 border-t border-slate-100">
                   <button
-                    onClick={() => setIsInquiryOpen(true)}
+                    onClick={() => handleOpenPropertyInquiry(item)}
                     className="w-full py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-xl font-extrabold text-xs shadow-md shadow-sky-600/20 transition-all flex items-center justify-center gap-2"
                   >
                     상세 문의하기
@@ -444,7 +450,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      <QuickInquiryModal isOpen={isInquiryOpen} onClose={() => setIsInquiryOpen(false)} />
+      <QuickInquiryModal
+        isOpen={isInquiryOpen}
+        onClose={() => {
+          setIsInquiryOpen(false);
+          setSelectedPropertyForInquiry(null);
+        }}
+        propertyTitle={selectedPropertyForInquiry?.public_title}
+        propertyId={selectedPropertyForInquiry?.id}
+      />
     </div>
   );
 }
