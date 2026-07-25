@@ -7,6 +7,7 @@ export interface MapProperty {
   id: string;
   property_no?: string;
   public_title?: string;
+  public_description?: string;
   masked_address?: string;
   approx_lat?: number;
   approx_lng?: number;

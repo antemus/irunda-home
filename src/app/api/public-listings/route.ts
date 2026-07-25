@@ -12,7 +12,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('properties')
-      .select('id, property_no, building_name, address, sido, sigungu, bname, latitude, longitude, property_type, transaction_type, deposit, rent, sale_price, premium, exclusive_area, contract_area, land_area, features, current_status, registered_platforms, created_at')
+      .select('id, property_no, building_name, address, sido, sigungu, bname, latitude, longitude, property_type, transaction_type, deposit, rent, sale_price, premium, exclusive_area, contract_area, land_area, features, etc, current_status, registered_platforms, created_at')
       .in('is_completed', ['N', 'H'])
       .order('created_at', { ascending: false });
 

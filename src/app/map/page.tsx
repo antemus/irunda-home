@@ -61,10 +61,17 @@ function MapSearchContent() {
             }
           }
 
+          const desc = (item.etc && item.etc !== 'null') 
+            ? item.etc 
+            : (item.current_status && item.current_status !== 'null') 
+            ? item.current_status 
+            : '울산 지역 현장 실사를 거친 검증 실매물입니다.';
+
           return {
             id: item.id,
             property_no: item.property_no,
             public_title: title,
+            public_description: desc,
             masked_address: maskedAddr,
             approx_lat: approx.lat,
             approx_lng: approx.lng,
@@ -237,6 +244,11 @@ function MapSearchContent() {
                       <h4 className="text-sm font-black text-slate-900 line-clamp-1">
                         {item.public_title || '울산 추천 우수 매물'}
                       </h4>
+                      {item.public_description && (
+                        <p className="text-[11px] text-slate-500 font-normal line-clamp-2 mt-1 leading-snug">
+                          {item.public_description}
+                        </p>
+                      )}
                       <p className="text-xs text-slate-500 font-semibold flex items-center gap-1 mt-1">
                         <MapPin className="w-3.5 h-3.5 text-sky-600 shrink-0" />
                         {item.masked_address || '위치 정보 미공개'}
