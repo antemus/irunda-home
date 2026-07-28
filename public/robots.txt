@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://irunda.co.kr/sitemap.xml
