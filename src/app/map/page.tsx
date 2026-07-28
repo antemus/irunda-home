@@ -83,15 +83,36 @@ function MapSearchContent() {
 
   const filteredProperties = properties.filter((item) => {
     if (propertyTypeFilter !== '전체') {
+      const pType = item.property_type || '';
       if (propertyTypeFilter === '상가/점포') {
-        if (!(item.property_type || '').includes('상가') && !(item.property_type || '').includes('점포')) return false;
+        if (!pType.includes('상가') && !pType.includes('점포')) return false;
       } else if (propertyTypeFilter === '아파트/오피스텔') {
-        if (!(item.property_type || '').includes('아파트') && !(item.property_type || '').includes('오피스텔')) return false;
-      } else if (item.property_type !== propertyTypeFilter) {
+        if (!pType.includes('아파트') && !pType.includes('오피스텔')) return false;
+      } else if (propertyTypeFilter === '주택') {
+        if (!pType.includes('주택') && !pType.includes('원룸') && !pType.includes('투룸') && !pType.includes('쓰리룸')) return false;
+      } else if (propertyTypeFilter === '토지') {
+        if (!pType.includes('토지') && !pType.includes('공장')) return false;
+      } else if (!pType.includes(propertyTypeFilter)) {
         return false;
       }
     }
-    if (transactionTypeFilter !== '전체' && item.transaction_type !== transactionTypeFilter) return false;
+
+    if (transactionTypeFilter !== '전체') {
+      const trans = item.transaction_type || '';
+      if (transactionTypeFilter === '임대') {
+        // '월세', '전세', '임대' 모두 포함 (매매가 아닌 경우)
+        if (trans === '매매') return false;
+      } else if (transactionTypeFilter === '월세') {
+        if (!trans.includes('월세') && trans !== '임대') return false;
+      } else if (transactionTypeFilter === '전세') {
+        if (!trans.includes('전세')) return false;
+      } else if (transactionTypeFilter === '매매') {
+        if (!trans.includes('매매')) return false;
+      } else if (trans !== transactionTypeFilter) {
+        return false;
+      }
+    }
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const title = (item.public_title || '').toLowerCase();
@@ -139,7 +160,9 @@ function MapSearchContent() {
               >
                 <option value="전체">구분: 전체</option>
                 <option value="임대">임대 (월세/전세)</option>
-                <option value="매매">매매</option>
+                <option value="월세">월세만</option>
+                <option value="전세">전세만</option>
+                <option value="매매">매매만</option>
               </select>
             </div>
           </div>
