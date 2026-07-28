@@ -55,6 +55,10 @@ export default function Footer() {
           <div className="space-y-3">
             <h4 className="text-white font-semibold text-sm tracking-wider uppercase">사무소 정보</h4>
             <div className="space-y-2 text-sm text-slate-400">
+              <p className="flex items-center gap-2 text-slate-300 font-medium">
+                <Building2 className="w-4 h-4 text-sky-400 shrink-0" />
+                대표: 장혜경 (등록번호: 31140202500096)
+              </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-sky-400 shrink-0" />
                 대표전화: 010-2772-1719
@@ -73,8 +77,10 @@ export default function Footer() {
 
         <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} 이룬다 공인중개사사무소 (irunda.co.kr). All rights reserved.</p>
-          <div className="flex gap-4">
-            <span>공인중개사 자격 정식 등록업소</span>
+          <div className="flex flex-wrap gap-2 md:gap-4 items-center">
+            <span>개설등록번호: 31140202500096</span>
+            <span>·</span>
+            <span>대표: 장혜경</span>
             <span>·</span>
             <span>울산 상가/아파트 전문</span>
           </div>

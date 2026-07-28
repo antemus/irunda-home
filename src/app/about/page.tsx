@@ -127,7 +127,8 @@ export default function AboutPage() {
             </div>
             <h3 className="text-base font-bold text-slate-900">중개사무소 정보</h3>
             <p className="text-xs font-medium text-slate-600">상호: 이룬다 공인중개사사무소</p>
-            <p className="text-xs font-semibold text-slate-800">대표: 장혜경 대표 공인중개사 (소장)</p>
+            <p className="text-xs font-semibold text-slate-800">대표: 장혜경 대표 공인중개사</p>
+            <p className="text-xs font-semibold text-sky-700">개설등록번호: 31140202500096</p>
             <p className="text-xs font-medium text-slate-600">주소: 울산 남구 화합로148번길 12 1층</p>
           </div>
 
@@ -136,8 +137,9 @@ export default function AboutPage() {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900">등록 & 보증 보험</h3>
-            <p className="text-xs font-medium text-slate-600">공인중개사 자격 정식 등록</p>
-            <p className="text-xs font-medium text-slate-600">울산 상가/주거 부동산 보증보험 가입업소</p>
+            <p className="text-xs font-semibold text-slate-800">개설등록번호: 31140202500096</p>
+            <p className="text-xs font-medium text-slate-600">울산 남구청 정식 개설 등록 업소</p>
+            <p className="text-xs font-medium text-slate-600">100% 부동산 손해배상 보증보험 가입업소</p>
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-3">
