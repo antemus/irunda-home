@@ -28,6 +28,10 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <head>
         <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
+        <Script
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JS_KEY || '1b7e90b88ede13eb031b08a9b3071c60'}&autoload=false&libraries=services,clusterer`}
+          strategy="beforeInteractive"
+        />
       </head>
       <body className="flex flex-col min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-sky-500 selection:text-white">
         <Header />
