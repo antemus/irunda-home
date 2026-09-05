@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
+import { MapPin, RefreshCw, AlertTriangle, ExternalLink, Maximize2, Minimize2 } from 'lucide-react';
 
 export interface MapProperty {
   id: string;
@@ -23,6 +23,7 @@ interface KakaoMapProps {
   selectedPropertyId?: string;
   onSelectProperty?: (property: MapProperty) => void;
   center?: { lat: number; lng: number };
+  isExpanded?: boolean;
 }
 
 declare global {
@@ -36,12 +37,15 @@ export default function KakaoMap({
   selectedPropertyId,
   onSelectProperty,
   center = { lat: 35.5383, lng: 129.3114 }, // 울산 중심 기본 좌표
+  isExpanded = false,
 }: KakaoMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const overlaysRef = useRef<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // 카카오맵 SDK 로드 및 초기화
   useEffect(() => {
@@ -85,11 +89,9 @@ export default function KakaoMap({
       });
     };
 
-    // 1. 이미 SDK가 로드되어 있는 경우
     if (window.kakao && window.kakao.maps) {
       initMap();
     } else {
-      // 2. 동적 스크립트 로드
       const scriptId = 'kakao-map-sdk';
       let script = document.getElementById(scriptId) as HTMLScriptElement;
 
@@ -108,7 +110,6 @@ export default function KakaoMap({
         }
       };
 
-      // 일정 주기로 window.kakao.maps 감지
       const interval = setInterval(() => {
         if (window.kakao && window.kakao.maps) {
           clearInterval(interval);
@@ -126,6 +127,22 @@ export default function KakaoMap({
       isMounted = false;
     };
   }, []);
+
+  // 창 크기나 확장 모드 변경 시 relayout 호출
+  useEffect(() => {
+    if (mapRef.current && window.kakao?.maps) {
+      const timer = setTimeout(() => {
+        mapRef.current.relayout();
+        if (selectedPropertyId) {
+          const target = properties.find((p) => p.id === selectedPropertyId);
+          if (target && target.approx_lat && target.approx_lng) {
+            mapRef.current.panTo(new window.kakao.maps.LatLng(target.approx_lat, target.approx_lng));
+          }
+        }
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isExpanded, isFullscreen, selectedPropertyId, properties]);
 
   // 매물 마커 (CustomOverlay) 렌더링
   const renderOverlays = (map: any) => {
@@ -188,7 +205,6 @@ export default function KakaoMap({
       overlaysRef.current.push(customOverlay);
     });
 
-    // 선택된 매물이 있으면 해당 매물로 이동, 없으면 전체 매물이 다 보이게 범위 조정
     if (selectedPropertyId) {
       const target = properties.find((p) => p.id === selectedPropertyId);
       if (target && target.approx_lat && target.approx_lng) {
@@ -199,7 +215,6 @@ export default function KakaoMap({
     }
   };
 
-  // properties나 selectedPropertyId 변경 시 마커 재렌더링
   useEffect(() => {
     if (mapRef.current && isLoaded) {
       renderOverlays(mapRef.current);
@@ -221,16 +236,25 @@ export default function KakaoMap({
     }
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   return (
     <div 
-      className="relative w-full rounded-3xl overflow-hidden shadow-inner border border-slate-200 bg-slate-100"
-      style={{ width: '100%', height: '100%', minHeight: '550px' }}
+      ref={wrapperRef}
+      className={`relative w-full rounded-3xl overflow-hidden shadow-inner border border-slate-200 bg-slate-100 transition-all ${
+        isFullscreen
+          ? 'fixed inset-0 z-[99999] rounded-none h-screen w-screen'
+          : 'h-full min-h-[550px]'
+      }`}
+      style={{ width: '100%', height: '100%' }}
     >
       {/* 카카오맵 캔버스 컨테이너 */}
       <div 
         ref={containerRef} 
-        style={{ width: '100%', height: '100%', minHeight: '550px' }} 
-        className="w-full h-full min-h-[550px]"
+        style={{ width: '100%', height: '100%' }} 
+        className="w-full h-full"
       />
 
       {/* 로딩 인디케이터 */}
@@ -275,7 +299,7 @@ export default function KakaoMap({
         </div>
       )}
 
-      {/* 상단 보안 위치 배지 & 위치 초기화 버튼 */}
+      {/* 상단 보안 위치 배지 & 컨트롤 버튼 모음 */}
       {isLoaded && (
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-2">
           <div className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-2xl shadow-md border border-slate-200 text-xs font-bold text-slate-800 flex items-center gap-2">
@@ -293,6 +317,24 @@ export default function KakaoMap({
           >
             <RefreshCw className="w-3.5 h-3.5 text-sky-600" />
             <span>전체 위치</span>
+          </button>
+
+          <button
+            onClick={toggleFullscreen}
+            className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-2xl shadow-md border border-slate-800 text-xs font-extrabold flex items-center gap-1.5 transition-all active:scale-95"
+            title={isFullscreen ? '기본 화면으로 복귀' : '지도 전체화면으로 크게보기'}
+          >
+            {isFullscreen ? (
+              <>
+                <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>화면 축소</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>지도 전체화면 확대</span>
+              </>
+            )}
           </button>
         </div>
       )}
