@@ -29,7 +29,7 @@ export default function RootLayout({
       <head>
         <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
         <Script
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JS_KEY || '1b7e90b88ede13eb031b08a9b3071c60'}&autoload=false&libraries=services,clusterer`}
+          src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JS_KEY || '1b7e90b88ede13eb031b08a9b3071c60'}&autoload=false&libraries=services,clusterer`}
           strategy="beforeInteractive"
         />
       </head>
