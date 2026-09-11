@@ -53,7 +53,7 @@ export default function HomePage() {
   const [selectedPropertyForInquiry, setSelectedPropertyForInquiry] = useState<PropertyItem | null>(null);
   const [selectedPropertyForDetail, setSelectedPropertyForDetail] = useState<PropertyItem | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 6;
+  const ITEMS_PER_PAGE = 30;
   const listingsSectionRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
@@ -141,6 +141,19 @@ export default function HomePage() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  const getVisiblePages = (current: number, total: number): (number | string)[] => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    if (current <= 4) {
+      return [1, 2, 3, 4, 5, '...', total];
+    }
+    if (current >= total - 3) {
+      return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+    }
+    return [1, '...', current - 1, current, current + 1, '...', total];
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -462,19 +475,28 @@ export default function HomePage() {
               </button>
 
               <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`w-9 h-9 rounded-xl text-xs font-extrabold transition-all ${
-                      currentPage === pageNum
-                        ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30 ring-2 ring-sky-600/20'
-                        : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
+                {getVisiblePages(currentPage, totalPages).map((pageNum, idx) => {
+                  if (typeof pageNum === 'string') {
+                    return (
+                      <span key={`ellipsis-${idx}`} className="w-6 text-center text-slate-400 font-bold text-xs select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`w-9 h-9 rounded-xl text-xs font-extrabold transition-all ${
+                        currentPage === pageNum
+                          ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30 ring-2 ring-sky-600/20'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
               </div>
 
               <button
