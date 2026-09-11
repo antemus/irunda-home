@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -18,6 +18,8 @@ import {
   Lock,
   MessageSquare,
   FileText,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice } from '@/utils/geoJitter';
 
@@ -50,6 +52,9 @@ export default function HomePage() {
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [selectedPropertyForInquiry, setSelectedPropertyForInquiry] = useState<PropertyItem | null>(null);
   const [selectedPropertyForDetail, setSelectedPropertyForDetail] = useState<PropertyItem | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
+  const listingsSectionRef = useRef<HTMLElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -128,6 +133,26 @@ export default function HomePage() {
     if (selectedType === '아파트/오피스텔') return (p.property_type || '').includes('아파트') || (p.property_type || '').includes('오피스텔');
     return p.property_type === selectedType;
   });
+
+  const handleTypeSelect = (type: string) => {
+    setSelectedType(type);
+    setCurrentPage(1);
+  };
+
+  const totalPages = Math.ceil(filteredProperties.length / ITEMS_PER_PAGE);
+  const paginatedProperties = filteredProperties.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (listingsSectionRef.current) {
+      const yOffset = -80;
+      const y = listingsSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   const handleOpenPropertyInquiry = (item?: PropertyItem) => {
     setSelectedPropertyForInquiry(item || null);
@@ -302,10 +327,15 @@ export default function HomePage() {
       </section>
 
       {/* Recommended Public Listings Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <section ref={listingsSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
           <div className="space-y-2">
-            <span className="text-xs font-bold tracking-wider text-sky-600 uppercase">RECOMMENDED PROPERTIES</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold tracking-wider text-sky-600 uppercase">RECOMMENDED PROPERTIES</span>
+              <span className="px-2.5 py-0.5 bg-sky-50 text-sky-700 rounded-full text-xs font-extrabold border border-sky-200">
+                총 {filteredProperties.length}개 매물 (페이지 {currentPage}/{totalPages || 1})
+              </span>
+            </div>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
               이룬다 추천 대표 실매물
             </h2>
@@ -319,7 +349,7 @@ export default function HomePage() {
             {['전체', '상가/점포', '아파트/오피스텔', '주택', '토지'].map((type) => (
               <button
                 key={type}
-                onClick={() => setSelectedType(type)}
+                onClick={() => handleTypeSelect(type)}
                 className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
                   selectedType === type
                     ? 'bg-white text-sky-700 shadow-md'
@@ -347,7 +377,7 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProperties.map((item) => (
+            {paginatedProperties.map((item) => (
               <div
                 key={item.id}
                 className="group bg-white rounded-3xl border border-slate-200/90 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1"
@@ -420,7 +450,50 @@ export default function HomePage() {
           </div>
         )}
 
-        <div className="text-center pt-4">
+        {/* Pagination Bar */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-slate-200">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white flex items-center gap-1 shadow-sm transition-all"
+                title="이전 페이지"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>이전</span>
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-9 h-9 rounded-xl text-xs font-extrabold transition-all ${
+                      currentPage === pageNum
+                        ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30 ring-2 ring-sky-600/20'
+                        : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-white flex items-center gap-1 shadow-sm transition-all"
+                title="다음 페이지"
+              >
+                <span>다음</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="text-center pt-2">
           <Link
             href="/map"
             className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm rounded-2xl border border-slate-800 shadow-xl transition-all hover:scale-105 whitespace-nowrap"
