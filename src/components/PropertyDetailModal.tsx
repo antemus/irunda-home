@@ -82,7 +82,7 @@ export default function PropertyDetailModal({
               </div>
             ) : (
               <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 text-xs font-semibold">
-                등록된 상세 설명문이 없습니다. 이룬다 공인중개사(010-2772-1719)로 문의하시면 친절히 안내해 드립니다.
+                등록된 상세 설명문이 없습니다. 이룬다부동산중개(010-2772-1719)로 문의하시면 친절히 안내해 드립니다.
               </div>
             )}
           </div>

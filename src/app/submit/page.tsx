@@ -194,7 +194,7 @@ export default function SubmitPropertyPage() {
 
           <div className="flex items-center gap-2 text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl border border-slate-100 font-medium">
             <Lock className="w-4 h-4 text-sky-600 shrink-0" />
-            <span>수집된 정보는 이룬다 공인중개사의 매물 중개 및 안내 목적으로만 안전하게 보호됩니다.</span>
+            <span>수집된 정보는 이룬다부동산중개의 매물 중개 및 안내 목적으로만 안전하게 보호됩니다.</span>
           </div>
 
           <button

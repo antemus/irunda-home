@@ -29,7 +29,7 @@ export default function Header() {
                   </span>
                 </div>
                 <span className="text-xs font-semibold text-slate-500 tracking-wide whitespace-nowrap">
-                  울산 상가 전문 · 아파트 · 오피스텔 공인중개사사무소
+                  울산 상가 전문 · 아파트 · 오피스텔 부동산중개
                 </span>
               </div>
             </Link>

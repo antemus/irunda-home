@@ -21,7 +21,7 @@ export default function AboutPage() {
             신뢰와 정직으로 가치를 이룹니다
           </h1>
           <p className="text-slate-600 text-base leading-relaxed">
-            이룬다 공인중개사사무소는 울산 전지역 상가·점포 정밀 상권분석 및 아파트·오피스텔 100% 실매물로 고객님의 부동산 거래를 안전하게 책임집니다.
+            이룬다부동산중개는 울산 전지역 상가·점포 정밀 상권분석 및 아파트·오피스텔 100% 실매물로 고객님의 부동산 거래를 안전하게 책임집니다.
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export default function AboutPage() {
             <div className="space-y-1">
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900">장혜경 소장</h2>
               <p className="text-xs font-bold text-sky-700 tracking-wide uppercase">
-                이룬다 공인중개사사무소 대표 공인중개사
+                이룬다부동산중개 대표 공인중개사
               </p>
             </div>
 
@@ -126,7 +126,7 @@ export default function AboutPage() {
               <Building2 className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900">중개사무소 정보</h3>
-            <p className="text-xs font-medium text-slate-600">상호: 이룬다 공인중개사사무소</p>
+            <p className="text-xs font-medium text-slate-600">상호: 이룬다부동산중개</p>
             <p className="text-xs font-semibold text-slate-800">대표: 장혜경 대표 공인중개사</p>
             <p className="text-xs font-semibold text-sky-700">개설등록번호: 31140202500096</p>
             <p className="text-xs font-medium text-slate-600">주소: 울산 남구 화합로148번길 12 1층</p>

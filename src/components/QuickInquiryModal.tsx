@@ -80,7 +80,7 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
                   {propertyTitle ? '매물 상세 문의하기' : '간편 3초 상담 문의'}
                 </h3>
                 <p className="text-xs text-sky-100 mt-0.5">
-                  {propertyTitle ? propertyTitle : '이룬다 공인중개사가 정성껏 답변해 드립니다.'}
+                  {propertyTitle ? propertyTitle : '이룬다부동산중개가 정성껏 답변해 드립니다.'}
                 </p>
               </div>
               <button

@@ -6,14 +6,14 @@ import Footer from '@/components/Footer';
 import FloatingContactBar from '@/components/FloatingContactBar';
 
 export const metadata: Metadata = {
-  title: '울산 상가·아파트 전문 | 이룬다 공인중개사',
+  title: '울산 상가·아파트 전문 | 이룬다부동산중개',
   description: '울산 전지역 상가, 점포, 아파트, 오피스텔 100% 실매물 전문. 정직한 시세와 권리분석으로 안전한 부동산 거래를 약속합니다.',
-  keywords: '이룬다부동산, 울산부동산, 울산상가임대, 울산상가매매, 울산아파트, 울산오피스텔, 이룬다공인중개사, irunda.co.kr',
+  keywords: '이룬다부동산중개, 이룬다부동산, 울산부동산, 울산상가임대, 울산상가매매, 울산아파트, 울산오피스텔, irunda.co.kr',
   openGraph: {
-    title: '울산 상가·아파트 전문 | 이룬다 공인중개사',
+    title: '울산 상가·아파트 전문 | 이룬다부동산중개',
     description: '100% 검증된 실매물과 안심 거래. 울산 상가·점포·아파트·오피스텔 지도 탐색 및 1:1 간편 상담',
     url: 'https://irunda.co.kr',
-    siteName: '이룬다 부동산',
+    siteName: '이룬다부동산중개',
     locale: 'ko_KR',
     type: 'website',
   },

@@ -222,7 +222,7 @@ export default function HomePage() {
             <div className="space-y-1">
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900">장혜경 소장</h2>
               <p className="text-xs sm:text-sm font-bold text-sky-700 tracking-wide whitespace-nowrap">
-                이룬다 공인중개사사무소 대표 공인중개사
+                이룬다부동산중개 대표 공인중개사
               </p>
             </div>
 
@@ -243,7 +243,7 @@ export default function HomePage() {
             </div>
 
             <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
-              안녕하세요. 이룬다 공인중개사사무소 대표 <strong>장혜경 소장</strong>입니다. <br />
+              안녕하세요. 이룬다부동산중개 대표 <strong>장혜경 소장</strong>입니다. <br />
               울산 전지역의 <strong>상가·점포 정밀 입지 분석</strong>부터 <strong>아파트·오피스텔 매매/임대</strong>까지, 
               직접 현장을 확인한 <strong>100% 검증 실매물</strong>만을 엄선하여 최고의 만족을 선사합니다.
             </p>

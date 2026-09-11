@@ -28,7 +28,7 @@ export default function InquirySuccessModal({ isOpen, onClose, customerName = '�
         <div className="space-y-2">
           <h3 className="text-xl font-bold text-slate-900">문의가 성공적으로 접수되었습니다!</h3>
           <p className="text-sm text-slate-600 leading-relaxed">
-            <span className="font-semibold text-sky-700">{customerName}</span>님, 이룬다 공인중개사가 확인 후 입력해주신 연락처로 신속히 안내해 드리겠습니다.
+            <span className="font-semibold text-sky-700">{customerName}</span>님, 이룬다부동산중개에서 확인 후 입력해주신 연락처로 신속히 안내해 드리겠습니다.
           </p>
         </div>
 

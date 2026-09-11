@@ -12,10 +12,10 @@ export default function Footer() {
               <div className="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center text-white font-bold">
                 <Building2 className="w-5 h-5" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">이룬다 공인중개사사무소</span>
+              <span className="text-xl font-bold text-white tracking-tight">이룬다부동산중개</span>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed max-w-md">
-              이룬다 부동산(irunda.co.kr)은 울산 전지역 상가, 점포, 수익형 부동산, 아파트, 오피스텔 전문 공인중개사사무소입니다.
+              이룬다부동산중개(irunda.co.kr)은 울산 전지역 상가, 점포, 수익형 부동산, 아파트, 오피스텔 전문 부동산중개업소입니다.
               허위 매물 없이 100% 검증된 실매물과 정직한 상권 및 시세 분석으로 고객님의 성공적인 거래를 이룹니다.
             </p>
             <div className="flex items-center gap-2 text-sky-400 text-xs font-semibold">
@@ -76,7 +76,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} 이룬다 공인중개사사무소 (irunda.co.kr). All rights reserved.</p>
+          <p>© {new Date().getFullYear()} 이룬다부동산중개 (irunda.co.kr). All rights reserved.</p>
           <div className="flex flex-wrap gap-2 md:gap-4 items-center">
             <span>개설등록번호: 31140202500096</span>
             <span>·</span>
