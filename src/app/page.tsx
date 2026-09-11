@@ -21,7 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice } from '@/utils/geoJitter';
+import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyDetailModal from '@/components/PropertyDetailModal';
@@ -128,10 +128,7 @@ export default function HomePage() {
   };
 
   const filteredProperties = properties.filter((p) => {
-    if (selectedType === '전체') return true;
-    if (selectedType === '상가/점포') return (p.property_type || '').includes('상가') || (p.property_type || '').includes('점포');
-    if (selectedType === '아파트/오피스텔') return (p.property_type || '').includes('아파트') || (p.property_type || '').includes('오피스텔');
-    return p.property_type === selectedType;
+    return matchPropertyType(selectedType, p.property_type);
   });
 
   const handleTypeSelect = (type: string) => {

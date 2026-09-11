@@ -60,7 +60,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
 
         const title = data.public_title 
           ? data.public_title 
-          : `${data.sigungu || '포항'} ${data.bname || ''} ${data.property_type || '우수'} 매물 (${data.transaction_type || '매매'})`;
+          : `${data.sigungu || '울산'} ${data.bname || ''} ${data.property_type || '우수'} 매물 (${data.transaction_type || '매매'})`;
 
         const formattedPrice = data.price 
           ? String(data.price) 

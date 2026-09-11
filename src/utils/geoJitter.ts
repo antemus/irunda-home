@@ -155,11 +155,74 @@ export function generateSecureTitle(item: any): string {
     return `${sigungu} ${bname}${pyeongStr}추천 상가 (${trans})`;
   } else if (pType.includes('오피스텔') || pType.includes('아파트')) {
     return `${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
-  } else if (pType.includes('원룸') || pType.includes('투룸') || pType.includes('주택')) {
+  } else if (pType.includes('원룸') || pType.includes('투룸') || pType.includes('쓰리룸') || pType.includes('주택') || pType.includes('단독') || pType.includes('다가구')) {
     return `${sigungu} ${bname}${pyeongStr}인기 주거 매물 (${trans})`;
-  } else if (pType.includes('토지')) {
+  } else if (pType.includes('토지') || pType.includes('임야')) {
     return `${sigungu} ${bname}${pyeongStr}토지 매물 (${trans})`;
   }
 
   return `${sigungu} ${bname}${pyeongStr}${pType} (${trans})`;
 }
+
+/**
+ * 매물 유형 필터 매칭 함수
+ */
+export function matchPropertyType(filterType: string, propertyType?: string): boolean {
+  if (!filterType || filterType === '전체') return true;
+  const p = (propertyType || '').trim();
+  if (!p) return false;
+
+  if (filterType === '상가/점포') {
+    return (
+      p.includes('상가') ||
+      p.includes('점포') ||
+      p.includes('건물') ||
+      p.includes('빌딩') ||
+      p.includes('숙박') ||
+      p.includes('모텔') ||
+      p.includes('펜션') ||
+      p.includes('호텔') ||
+      p.includes('사무실') ||
+      p.includes('근생')
+    );
+  }
+
+  if (filterType === '아파트/오피스텔') {
+    return (
+      p.includes('아파트') ||
+      p.includes('오피스텔') ||
+      p.includes('도시형')
+    );
+  }
+
+  if (filterType === '주택') {
+    return (
+      p.includes('주택') ||
+      p.includes('단독') ||
+      p.includes('다가구') ||
+      p.includes('다세대') ||
+      p.includes('빌라') ||
+      p.includes('원룸') ||
+      p.includes('투룸') ||
+      p.includes('쓰리룸') ||
+      p.includes('연립') ||
+      p.includes('한옥')
+    );
+  }
+
+  if (filterType === '토지') {
+    return (
+      p.includes('토지') ||
+      p.includes('임야') ||
+      p.includes('공장') ||
+      p.includes('창고') ||
+      p.includes('전') ||
+      p.includes('답') ||
+      p.includes('대지') ||
+      p.includes('잡종지')
+    );
+  }
+
+  return p.includes(filterType);
+}
+

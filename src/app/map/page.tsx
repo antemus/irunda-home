@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert, Lock, FileText, LayoutGrid, Maximize, Columns } from 'lucide-react';
 
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice } from '@/utils/geoJitter';
+import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyDetailModal from '@/components/PropertyDetailModal';
@@ -85,16 +85,7 @@ function MapSearchContent() {
 
   const filteredProperties = properties.filter((item) => {
     if (propertyTypeFilter !== '전체') {
-      const pType = item.property_type || '';
-      if (propertyTypeFilter === '상가/점포') {
-        if (!pType.includes('상가') && !pType.includes('점포')) return false;
-      } else if (propertyTypeFilter === '아파트/오피스텔') {
-        if (!pType.includes('아파트') && !pType.includes('오피스텔')) return false;
-      } else if (propertyTypeFilter === '주택') {
-        if (!pType.includes('주택') && !pType.includes('원룸') && !pType.includes('투룸') && !pType.includes('쓰리룸')) return false;
-      } else if (propertyTypeFilter === '토지') {
-        if (!pType.includes('토지') && !pType.includes('공장')) return false;
-      } else if (!pType.includes(propertyTypeFilter)) {
+      if (!matchPropertyType(propertyTypeFilter, item.property_type)) {
         return false;
       }
     }
