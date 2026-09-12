@@ -29,6 +29,7 @@ export default function QuickInquiryModal({ isOpen, onClose, propertyTitle, prop
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     // 입력값 유효성 및 스팸 필터링 검사
     const validation = validateInquiry(name, phone, message);

@@ -22,6 +22,7 @@ export default function SubmitPropertyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     const fullContent = `[${inquiryType === 'submit_property' ? '울산 매물 내놓기' : '울산 매물 구하기'}]\n- 희망지역/소재지: ${location || '미입력'}\n- 희망가격/예산: ${priceRange || '미입력'}\n- 세부요청: ${message}`;
 

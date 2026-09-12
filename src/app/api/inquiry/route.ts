@@ -61,6 +61,27 @@ async function sendMobileNotification(inquiryData: {
   }
 }
 
+// 빠른 중복 접수 방지를 위한 인메모리 캐시 (최근 5분)
+const recentSubmissions = new Map<string, number>();
+
+function isRecentDuplicate(phone: string): boolean {
+  const now = Date.now();
+  // 5분 경과한 키 정리
+  for (const [key, timestamp] of recentSubmissions.entries()) {
+    if (now - timestamp > 5 * 60 * 1000) {
+      recentSubmissions.delete(key);
+    }
+  }
+
+  const lastSubmitted = recentSubmissions.get(phone);
+  if (lastSubmitted && now - lastSubmitted < 5 * 60 * 1000) {
+    return true;
+  }
+
+  recentSubmissions.set(phone, now);
+  return false;
+}
+
 export async function POST(request: Request) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://lalmyznpdqzjshewndyp.supabase.co';
@@ -79,6 +100,34 @@ export async function POST(request: Request) {
     const cleanName = validation.cleanName || name.trim();
     const cleanPhone = validation.cleanPhone || phone.trim();
 
+    // 1. 인메모리 빠른 중복 검사 (더블클릭/연타 즉시 차단)
+    if (isRecentDuplicate(cleanPhone)) {
+      console.log(`[중복 문의 차단] 동일 연락처(${cleanPhone}) 최근 접수 기록 감지 (인메모리 차단)`);
+      return NextResponse.json({
+        success: true,
+        message: '이미 접수된 문의입니다. 담당자가 순차적으로 신속히 안내해 드리겠습니다.',
+        duplicate: true,
+      }, { status: 200 });
+    }
+
+    // 2. DB 기반 5분 이내 동일 연락처 중복 검사 (서버리스 다중 인스턴스 대응)
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: recentInquiries } = await supabase
+      .from('public_inquiries')
+      .select('id, created_at')
+      .eq('phone', cleanPhone)
+      .gte('created_at', fiveMinutesAgo)
+      .limit(1);
+
+    if (recentInquiries && recentInquiries.length > 0) {
+      console.log(`[중복 문의 차단] 동일 연락처(${cleanPhone}) 5분 이내 DB 접수 이력 존재 -> 중복 알림 및 저장 방지`);
+      return NextResponse.json({
+        success: true,
+        message: '이미 접수된 문의입니다. 담당자가 순차적으로 신속히 안내해 드리겠습니다.',
+        duplicate: true,
+      }, { status: 200 });
+    }
+
     const { data, error } = await supabase.from('public_inquiries').insert([
       {
         name: cleanName,
@@ -96,7 +145,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '데이터 저장 중 오류가 발생했습니다.' }, { status: 500 });
     }
 
-    // 휴대폰 실시간 알림 발송 실행
+    // 휴대폰 실시간 알림 발송 실행 (중복이 아닐 때만 1회 발송)
     await sendMobileNotification({
       name: cleanName,
       phone: cleanPhone,
