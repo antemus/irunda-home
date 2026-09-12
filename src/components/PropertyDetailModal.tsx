@@ -1,6 +1,6 @@
 'use client';
 
-import { X, FileText, Phone, MessageSquare, MapPin, Building2, ShieldCheck, Tag } from 'lucide-react';
+import { X, FileText, Phone, MessageSquare, MapPin, Building2, ShieldCheck, Tag, Send } from 'lucide-react';
 
 interface PropertyDetailModalProps {
   isOpen: boolean;
@@ -89,23 +89,32 @@ export default function PropertyDetailModal({
         </div>
 
         {/* Modal Footer CTA */}
-        <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center gap-3 shrink-0">
+        <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center gap-2.5 shrink-0">
           <a
             href="tel:010-2772-1719"
-            className="w-full sm:w-1/2 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all"
+            className="w-full sm:flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all"
           >
             <Phone className="w-4 h-4 text-amber-400" />
-            전화 문의 (010-2772-1719)
+            전화 문의
+          </a>
+          <a
+            href={process.env.NEXT_PUBLIC_KAKAO_CHAT_URL || 'https://open.kakao.com/o/sGpdIfki'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:flex-1 py-3 bg-[#FEE500] hover:bg-[#FDD835] text-slate-950 rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all"
+          >
+            <MessageSquare className="w-4 h-4 fill-slate-950" />
+            카톡 1:1 상담
           </a>
           <button
             onClick={() => {
               onClose();
               if (onOpenInquiry) onOpenInquiry();
             }}
-            className="w-full sm:w-1/2 py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 transition-all"
+            className="w-full sm:flex-1 py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-2xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 transition-all"
           >
-            <MessageSquare className="w-4 h-4" />
-            1:1 간편 문의하기
+            <Send className="w-4 h-4" />
+            간편 문의
           </button>
         </div>
       </div>

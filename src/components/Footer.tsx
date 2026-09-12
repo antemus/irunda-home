@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Building2, Phone, MapPin, ShieldCheck, Clock } from 'lucide-react';
+import { Building2, Phone, MapPin, ShieldCheck, Clock, MessageSquare } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -62,6 +62,18 @@ export default function Footer() {
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-sky-400 shrink-0" />
                 대표전화: 010-2772-1719
+              </p>
+              <p className="flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>카카오톡: </span>
+                <a
+                  href="https://open.kakao.com/o/sGpdIfki"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:text-amber-300 font-bold underline transition-colors"
+                >
+                  1:1 오픈채팅 문의
+                </a>
               </p>
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />

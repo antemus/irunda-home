@@ -9,6 +9,8 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
+  const kakaoChatUrl = process.env.NEXT_PUBLIC_KAKAO_CHAT_URL || 'https://open.kakao.com/o/sGpdIfki';
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-sm">
@@ -34,39 +36,43 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/80 text-sm font-bold text-slate-700">
-              <Link
-                href="/"
-                className="px-4 py-2 rounded-xl hover:text-sky-700 hover:bg-white transition-all shadow-none hover:shadow-sm"
-              >
-                홈
-              </Link>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1.5 lg:gap-3">
               <Link
                 href="/map"
-                className="px-4 py-2 rounded-xl text-sky-700 bg-white shadow-sm flex items-center gap-1.5 font-extrabold"
+                className="px-4 py-2 rounded-xl text-sm font-extrabold text-sky-700 bg-sky-50 hover:bg-sky-100/80 transition-all flex items-center gap-2 border border-sky-200/80 shadow-sm"
               >
                 <MapPin className="w-4 h-4 text-sky-600" />
                 지도 매물 탐색
               </Link>
               <Link
                 href="/submit"
-                className="px-4 py-2 rounded-xl hover:text-sky-700 hover:bg-white transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-sm font-extrabold text-slate-700 hover:text-slate-950 hover:bg-slate-100/80 transition-all flex items-center gap-2"
               >
-                <FileText className="w-4 h-4 text-amber-600" />
+                <FileText className="w-4 h-4 text-amber-500" />
                 매물 내놓기/구하기
               </Link>
               <Link
                 href="/about"
-                className="px-4 py-2 rounded-xl hover:text-sky-700 hover:bg-white transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-sm font-extrabold text-slate-700 hover:text-slate-950 hover:bg-slate-100/80 transition-all flex items-center gap-2"
               >
-                <UserCheck className="w-4 h-4 text-emerald-600" />
-                장혜경 소장 소개
+                <UserCheck className="w-4 h-4 text-emerald-500" />
+                소장 소개
               </Link>
             </nav>
 
             {/* CTA Buttons */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2.5">
+              <a
+                href={kakaoChatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2.5 rounded-xl bg-[#FEE500] hover:bg-[#FDD835] text-slate-950 font-extrabold text-sm shadow-sm transition-all flex items-center gap-1.5 hover:scale-105"
+                title="카카오톡 1:1 오픈채팅 문의"
+              >
+                <MessageSquare className="w-4 h-4 fill-slate-950 text-slate-950" />
+                카톡 1:1 문의
+              </a>
               <button
                 onClick={() => setIsInquiryModalOpen(true)}
                 className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm transition-all flex items-center gap-2 border border-slate-200"
@@ -76,7 +82,7 @@ export default function Header() {
               </button>
               <a
                 href="tel:010-2772-1719"
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center gap-2 hover:scale-105"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-extrabold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center gap-2 hover:scale-105"
               >
                 <Phone className="w-4 h-4" />
                 전화 상담
@@ -130,7 +136,16 @@ export default function Header() {
               <UserCheck className="w-4 h-4 text-emerald-600" />
               장혜경 소장 소개
             </Link>
-            <div className="pt-2 border-t border-slate-100">
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <a
+                href={kakaoChatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 rounded-xl bg-[#FEE500] hover:bg-[#FDD835] text-slate-950 font-extrabold text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-amber-400/20"
+              >
+                <MessageSquare className="w-4 h-4 fill-slate-950" />
+                카카오톡 1:1 채팅 문의
+              </a>
               <a
                 href="tel:010-2772-1719"
                 className="w-full py-3 rounded-xl bg-sky-600 text-white font-extrabold text-center text-sm flex items-center justify-center gap-2 shadow-md shadow-sky-600/20"

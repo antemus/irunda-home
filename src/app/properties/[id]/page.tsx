@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
-import { MapPin, Phone, MessageSquare, ArrowLeft, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, MessageSquare, ArrowLeft, ShieldCheck, CheckCircle2, Send } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { getApproximateCoordinates, maskAddress } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
@@ -190,19 +190,28 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
 
           {/* Action Buttons */}
           <div className="pt-4 flex flex-col sm:flex-row gap-3">
+            <a
+              href={process.env.NEXT_PUBLIC_KAKAO_CHAT_URL || 'https://open.kakao.com/o/sGpdIfki'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-slate-950 font-extrabold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all hover:scale-102"
+            >
+              <MessageSquare className="w-4 h-4 fill-slate-950" />
+              카톡 1:1 문의
+            </a>
             <button
               onClick={() => setIsInquiryOpen(true)}
               className="flex-1 py-3.5 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2"
             >
-              <MessageSquare className="w-4 h-4" />
-              이 매물 1:1 상담 문의하기
+              <Send className="w-4 h-4" />
+              온라인 간편 문의
             </button>
             <a
-              href="tel:010-8594-8949"
+              href="tel:010-2772-1719"
               className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl border border-slate-800 shadow-md flex items-center justify-center gap-2"
             >
               <Phone className="w-4 h-4 text-sky-400" />
-              전화 문의 (010-8594-8949)
+              전화 문의 (010-2772-1719)
             </a>
           </div>
         </div>
