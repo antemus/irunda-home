@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { getApproximateCoordinates, maskAddress } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
+import PropertyLegalNoticeTable from '@/components/PropertyLegalNoticeTable';
 
 export interface PropertyDetail {
   id: string;
@@ -22,6 +23,7 @@ export interface PropertyDetail {
   transaction_type?: string;
   images?: string[];
   created_at?: string;
+  raw_data?: any;
 }
 
 export default function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -84,6 +86,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
           area: data.land_area || data.contract_area || data.area || '-',
           images: data.images || [],
           created_at: data.created_at,
+          raw_data: data,
         });
       } catch (err: any) {
         console.warn('Handled detail query error:', err?.message || 'Query executed cleanly');
@@ -177,6 +180,9 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
               <div className="text-sm font-bold text-amber-400">반경 200m 가상위치</div>
             </div>
           </div>
+
+          {/* Legal Disclosures Table (공인중개사법 시행령 제17조의2 준수) */}
+          <PropertyLegalNoticeTable property={property.raw_data || property} theme="dark" />
 
           {/* Description */}
           {property.public_description && (

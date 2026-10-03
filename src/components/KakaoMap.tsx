@@ -16,6 +16,7 @@ export interface MapProperty {
   pyeong_price?: string | number;
   property_type?: string;
   transaction_type?: string;
+  [key: string]: any;
 }
 
 interface KakaoMapProps {

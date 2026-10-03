@@ -42,6 +42,23 @@ export interface PropertyItem {
   area?: string | number;
   images?: string[];
   created_at?: string;
+  floor?: string;
+  total_floors?: string;
+  rooms?: any;
+  restroom?: any;
+  direction?: string;
+  approval_date?: string;
+  parking?: string;
+  elevator?: string;
+  maintenance_fee?: any;
+  available_date?: string;
+  building_purpose?: string;
+  total_floor_area?: any;
+  building_area?: any;
+  deposit?: any;
+  rent?: any;
+  sale_price?: any;
+  raw_data?: any;
 }
 
 export default function HomePage() {
@@ -89,6 +106,7 @@ export default function HomePage() {
           const formattedPrice = formatPropertyPrice(item);
 
           return {
+            ...item,
             id: item.id,
             property_no: item.property_no,
             public_title: title,
@@ -102,6 +120,20 @@ export default function HomePage() {
             property_type: item.property_type || '상가점포',
             transaction_type: item.transaction_type || '임대',
             area: item.exclusive_area || item.contract_area || item.land_area,
+            floor: item.floor,
+            total_floors: item.total_floors,
+            rooms: item.rooms,
+            restroom: item.restroom,
+            direction: item.direction,
+            approval_date: item.approval_date,
+            parking: item.parking,
+            elevator: item.elevator,
+            maintenance_fee: item.maintenance_fee,
+            available_date: item.available_date,
+            building_purpose: item.building_purpose,
+            total_floor_area: item.total_floor_area,
+            building_area: item.building_area,
+            raw_data: item,
             created_at: item.created_at,
           };
         });
@@ -404,7 +436,10 @@ export default function HomePage() {
                     )}
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-sky-700 transition-colors line-clamp-2 leading-snug">
+                  <h3
+                    onClick={() => setSelectedPropertyForDetail(item)}
+                    className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-sky-700 transition-colors line-clamp-2 leading-snug cursor-pointer"
+                  >
                     {item.public_title}
                   </h3>
 
@@ -438,16 +473,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="px-6 pb-6 pt-2 border-t border-slate-100 flex gap-2">
-                  {item.etc && (
-                    <button
-                      onClick={() => setSelectedPropertyForDetail(item)}
-                      className="px-3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 shrink-0"
-                      title="상세설명 팝업 보기"
-                    >
-                      <FileText className="w-4 h-4 text-sky-700" />
-                      설명보기
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setSelectedPropertyForDetail(item)}
+                    className="px-3.5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shrink-0"
+                    title="법정 명시사항 및 상세설명 보기"
+                  >
+                    <FileText className="w-4 h-4 text-sky-700" />
+                    상세정보
+                  </button>
                   <button
                     onClick={() => handleOpenPropertyInquiry(item)}
                     className="flex-1 py-3 bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white rounded-xl font-extrabold text-xs shadow-md shadow-sky-600/20 transition-all flex items-center justify-center gap-2"
