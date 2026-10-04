@@ -199,6 +199,11 @@ function MapSearchContent() {
                 setSelectedProperty(prop);
                 if (isWideMap) setIsListDrawerOpen(true);
               }}
+              onOpenDetail={(prop) => setSelectedPropertyForDetail(prop)}
+              onOpenInquiry={(prop) => {
+                setSelectedProperty(prop);
+                setIsInquiryModalOpen(true);
+              }}
               isExpanded={isWideMap}
             />
 
