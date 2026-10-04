@@ -4,7 +4,7 @@ import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { MapPin, Phone, MessageSquare, ArrowLeft, ShieldCheck, CheckCircle2, Send } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { getApproximateCoordinates, maskAddress } from '@/utils/geoJitter';
+import { getPropertyCoordinates, formatDisplayAddress, isApartmentOrOfficetel } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyLegalNoticeTable from '@/components/PropertyLegalNoticeTable';
@@ -52,13 +52,8 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
           return;
         }
 
-        const lat = data.latitude ? Number(data.latitude) : 36.019;
-        const lng = data.longitude ? Number(data.longitude) : 129.343;
-        const approx = getApproximateCoordinates(lat, lng);
-
-        const maskedAddr = data.masked_address 
-          ? data.masked_address 
-          : maskAddress(`${data.sido || ''} ${data.sigungu || ''} ${data.bname || ''} ${data.address || ''}`);
+        const coords = getPropertyCoordinates(data);
+        const displayAddr = formatDisplayAddress(data);
 
         const title = data.public_title 
           ? data.public_title 
@@ -76,9 +71,9 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
           id: data.id,
           public_title: title,
           public_description: data.public_description || data.features || data.etc || '현장 실사를 거친 검증 실매물입니다.',
-          masked_address: maskedAddr,
-          approx_lat: approx.lat,
-          approx_lng: approx.lng,
+          masked_address: displayAddr,
+          approx_lat: coords.lat,
+          approx_lng: coords.lng,
           price: formattedPrice,
           pyeong_price: data.pyeong_price || (data.sale_price && data.land_area ? Math.round(Number(data.sale_price) / (Number(data.land_area) * 0.3025)) : undefined),
           property_type: data.property_type || '토지',
@@ -176,8 +171,10 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
               <div className="text-sm font-bold">{property.area ? `${property.area} ㎡` : '상세 문의'}</div>
             </div>
             <div>
-              <span className="text-xs text-slate-400">위치 보안</span>
-              <div className="text-sm font-bold text-amber-400">반경 200m 가상위치</div>
+              <span className="text-xs text-slate-400">위치 안내</span>
+              <div className="text-sm font-bold text-amber-400">
+                {isApartmentOrOfficetel(property.raw_data || property) ? '단지 정확한 위치' : '반경 200m 가상위치'}
+              </div>
             </div>
           </div>
 
@@ -227,10 +224,12 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <MapPin className="w-5 h-5 text-sky-400" />
-              매물 위치 정보 (보안 마커)
+              {isApartmentOrOfficetel(property.raw_data || property) ? '단지 위치 정보' : '매물 위치 정보 (보안 마커)'}
             </h3>
             <span className="text-xs text-amber-300 font-semibold bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">
-              실제 지번 비공개 / 반경 200~300m 부근 노출
+              {isApartmentOrOfficetel(property.raw_data || property)
+                ? '단지 정확한 위치 노출 (동·호수 비공개)'
+                : '실제 지번 비공개 / 반경 200~300m 부근 노출'}
             </span>
           </div>
           <div className="h-96 rounded-2xl overflow-hidden border border-slate-800">

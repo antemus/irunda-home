@@ -1,7 +1,7 @@
-import { formatSalePrice } from './geoJitter';
+import { formatSalePrice, isApartmentOrOfficetel, cleanApartmentBuildingName } from './geoJitter';
 
 export const BROKERAGE_DISCLOSURE = {
-  officeName: '이룬다공인중개사사무소',
+  officeName: '이룬다공인중개',
   registrationNo: '31140202500096',
   representative: '장혜경 (대표 공인중개사)',
   address: '울산광역시 남구 화합로148번길 12, 1층 (삼산동)',
@@ -45,11 +45,20 @@ export function getLegalNoticeData(item: any): LegalNoticeData {
     };
   }
 
-  // 1. 소재지
+  // 1. 소재지 (아파트/오피스텔은 동호를 제외한 정확한 주소 표시)
   const sido = item.sido || '울산광역시';
   const sigungu = item.sigungu || '남구';
   const bname = item.bname || '';
-  const location = `${sido} ${sigungu} ${bname}`.trim() + ' (의뢰인 요청 및 개인정보 보호를 위해 상세지번 비공개)';
+  let location = '';
+
+  if (isApartmentOrOfficetel(item)) {
+    const addr = item.address || '';
+    const cleanBName = cleanApartmentBuildingName(item.building_name);
+    const full = [sido, sigungu, bname, addr, cleanBName].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+    location = `${full} (동·호수 제외)`;
+  } else {
+    location = `${sido} ${sigungu} ${bname}`.trim() + ' (의뢰인 요청 및 개인정보 보호를 위해 상세지번 비공개)';
+  }
 
   // 2. 중개대상물 종류
   const propertyType = item.building_purpose || item.property_type || '건축물';

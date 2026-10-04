@@ -3,6 +3,45 @@ export interface GeoPoint {
   lng: number;
 }
 
+/**
+ * 아파트 및 오피스텔 여부 확인
+ */
+export function isApartmentOrOfficetel(item: any): boolean {
+  if (!item) return false;
+  const pType = (item.property_type || '').trim();
+  const bType = (item.building_type || '').trim();
+
+  if (
+    pType.includes('아파트') ||
+    pType.includes('오피스텔') ||
+    pType.includes('도시형')
+  ) {
+    return true;
+  }
+
+  if (
+    (bType.includes('아파트') || bType.includes('오피스텔')) &&
+    !pType.includes('상가') &&
+    !pType.includes('점포')
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * 아파트/오피스텔 건물명에서 동/호수 제거하여 단지명만 정제
+ */
+export function cleanApartmentBuildingName(name?: string): string {
+  if (!name) return '';
+  return name
+    .split('_')[0]
+    .replace(/\s*\d+동.*$/, '')
+    .replace(/\s*\d+호.*$/, '')
+    .trim();
+}
+
 export function getApproximateCoordinates(lat: number, lng: number, minRadiusMeters = 180, maxRadiusMeters = 300): GeoPoint {
   if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
     return { lat: 35.5383, lng: 129.3114 };
@@ -22,6 +61,26 @@ export function getApproximateCoordinates(lat: number, lng: number, minRadiusMet
     lat: Number((lat + deltaLat).toFixed(6)),
     lng: Number((lng + deltaLng).toFixed(6)),
   };
+}
+
+/**
+ * 매물 좌표 반환 (아파트/오피스텔은 정확한 위치, 상가/토지는 보안 가상위치)
+ */
+export function getPropertyCoordinates(item: any): GeoPoint {
+  const lat = item?.latitude ? Number(item.latitude) : 35.5383;
+  const lng = item?.longitude ? Number(item.longitude) : 129.3114;
+
+  if (isNaN(lat) || isNaN(lng) || !lat || !lng) {
+    return { lat: 35.5383, lng: 129.3114 };
+  }
+
+  // 아파트 및 오피스텔은 단지 정확한 위치 노출
+  if (isApartmentOrOfficetel(item)) {
+    return { lat, lng };
+  }
+
+  // 그 외 매물은 보안 반경 180~300m 가상좌표 적용
+  return getApproximateCoordinates(lat, lng);
 }
 
 export function maskAddress(fullAddress: string): string {
@@ -58,6 +117,30 @@ export function maskAddress(fullAddress: string): string {
   }
 
   return `${maskedTokens.join(' ')} 부근`;
+}
+
+/**
+ * 매물 주소 포맷터 (아파트/오피스텔은 동·호를 제외한 정확한 주소 및 단지명 표시, 그 외 매물은 마스킹 주소)
+ */
+export function formatDisplayAddress(item: any): string {
+  if (!item) return '위치 정보 미공개';
+
+  // 아파트 및 오피스텔: 동호를 제외한 정확한 주소 표시
+  if (isApartmentOrOfficetel(item)) {
+    const sido = (item.sido || '울산광역시').replace('울산광역시', '울산');
+    const sigungu = item.sigungu || '';
+    const bname = item.bname || '';
+    const addr = item.address || '';
+    const cleanBName = cleanApartmentBuildingName(item.building_name);
+
+    const parts = [sido, sigungu, bname, addr, cleanBName].filter(Boolean);
+    const full = parts.join(' ').replace(/\s+/g, ' ').trim();
+    if (full) return full;
+  }
+
+  // 상가, 토지 등: 보안 마스킹 주소
+  if (item.masked_address) return item.masked_address;
+  return maskAddress(`${item.sido || ''} ${item.sigungu || ''} ${item.bname || ''} ${item.address || ''}`);
 }
 
 /**

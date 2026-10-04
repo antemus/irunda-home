@@ -78,7 +78,7 @@ export default function PropertyDetailModal({
               </div>
             ) : (
               <div className="p-6 text-center bg-slate-50 rounded-2xl border border-slate-200 text-slate-500 text-xs font-semibold">
-                울산 상가·주거 실매물 전문 이룬다공인중개사사무소(010-2772-1719)로 문의하시면 현장 실사 및 맞춤 권리분석을 신속히 안내해 드립니다.
+                울산 상가·주거 실매물 전문 이룬다공인중개(010-2772-1719)로 문의하시면 현장 실사 및 맞춤 권리분석을 신속히 안내해 드립니다.
               </div>
             )}
           </div>

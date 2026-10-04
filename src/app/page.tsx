@@ -21,7 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
+import { getPropertyCoordinates, formatDisplayAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
 
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyDetailModal from '@/components/PropertyDetailModal';
@@ -93,16 +93,9 @@ export default function HomePage() {
         const displayList = data;
 
         const mappedItems: PropertyItem[] = displayList.map((item: any) => {
-          const lat = item.latitude ? Number(item.latitude) : 35.5383;
-          const lng = item.longitude ? Number(item.longitude) : 129.3114;
-          const approx = getApproximateCoordinates(lat, lng);
-
-          const maskedAddr = item.masked_address 
-            ? item.masked_address 
-            : maskAddress(`${item.sido || ''} ${item.sigungu || ''} ${item.bname || ''} ${item.address || ''}`);
-
+          const coords = getPropertyCoordinates(item);
+          const displayAddr = formatDisplayAddress(item);
           const title = generateSecureTitle(item);
-
           const formattedPrice = formatPropertyPrice(item);
 
           return {
@@ -112,9 +105,9 @@ export default function HomePage() {
             public_title: title,
             public_description: getPublicDescription(item),
             etc: item.etc && item.etc !== 'null' ? item.etc : undefined,
-            masked_address: maskedAddr,
-            approx_lat: approx.lat,
-            approx_lng: approx.lng,
+            masked_address: displayAddr,
+            approx_lat: coords.lat,
+            approx_lng: coords.lng,
             price: formattedPrice,
             pyeong_price: item.pyeong_price || (item.sale_price && item.land_area ? Math.round(Number(item.sale_price) / (Number(item.land_area) * 0.3025)) : undefined),
             property_type: item.property_type || '상가점포',

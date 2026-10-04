@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MapPin, Search, Filter, Building2, Phone, MessageSquare, ShieldAlert, Lock, FileText, LayoutGrid, Maximize, Columns } from 'lucide-react';
 
-import { getApproximateCoordinates, maskAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
+import { getPropertyCoordinates, formatDisplayAddress, generateSecureTitle, formatSalePrice, getPublicDescription, formatPropertyPrice, matchPropertyType } from '@/utils/geoJitter';
 import KakaoMap, { MapProperty } from '@/components/KakaoMap';
 import QuickInquiryModal from '@/components/QuickInquiryModal';
 import PropertyDetailModal from '@/components/PropertyDetailModal';
@@ -43,16 +43,9 @@ function MapSearchContent() {
         const displayData = data || [];
 
         const mapped: MapProperty[] = displayData.map((item: any) => {
-          const lat = item.latitude ? Number(item.latitude) : 35.5383;
-          const lng = item.longitude ? Number(item.longitude) : 129.3114;
-          const approx = getApproximateCoordinates(lat, lng);
-
-          const maskedAddr = item.masked_address 
-            ? item.masked_address 
-            : maskAddress(`${item.sido || ''} ${item.sigungu || ''} ${item.bname || ''} ${item.address || ''}`);
-
+          const coords = getPropertyCoordinates(item);
+          const displayAddr = formatDisplayAddress(item);
           const title = generateSecureTitle(item);
-
           const formattedPrice = formatPropertyPrice(item);
 
           return {
@@ -62,9 +55,9 @@ function MapSearchContent() {
             public_title: title,
             public_description: getPublicDescription(item),
             etc: item.etc && item.etc !== 'null' ? item.etc : undefined,
-            masked_address: maskedAddr,
-            approx_lat: approx.lat,
-            approx_lng: approx.lng,
+            masked_address: displayAddr,
+            approx_lat: coords.lat,
+            approx_lng: coords.lng,
             price: formattedPrice,
             pyeong_price: item.pyeong_price || (item.sale_price && item.land_area ? Math.round(Number(item.sale_price) / (Number(item.land_area) * 0.3025)) : undefined),
             property_type: item.property_type || '상가점포',
@@ -189,8 +182,8 @@ function MapSearchContent() {
 
             <div className="flex items-center gap-1.5 text-xs text-amber-800 bg-amber-50 px-3.5 py-2 rounded-2xl border border-amber-200 font-bold">
               <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600" />
-              <span className="hidden sm:inline">🛡️ 위치 보안: 지도는 반경 200m 가상 위치로 표시됩니다.</span>
-              <span className="sm:hidden">🛡️ 200m 보안 가상 위치</span>
+              <span className="hidden sm:inline">🛡️ 아파트·오피스텔은 단지 정확한 위치, 상가·토지는 보안 가상위치(반경 200m)로 표시됩니다.</span>
+              <span className="sm:hidden">🛡️ 단지 정확위치 / 상가 보안위치</span>
             </div>
           </div>
         </div>
