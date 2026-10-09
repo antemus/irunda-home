@@ -121,34 +121,80 @@ export default function AboutPage() {
 
         {/* Office Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-3">
-            <div className="w-10 h-10 bg-sky-50 text-sky-700 rounded-2xl flex items-center justify-center font-bold border border-sky-200">
-              <Building2 className="w-5 h-5" />
+          <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-sky-50 text-sky-700 rounded-2xl flex items-center justify-center font-bold border border-sky-200">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900">중개사무소 정보</h3>
+              <div className="space-y-1.5 text-xs text-slate-600">
+                <p><span className="font-semibold text-slate-800">상호:</span> 이룬다부동산중개</p>
+                <p><span className="font-semibold text-slate-800">대표:</span> 장혜경 대표 공인중개사</p>
+                <p><span className="font-semibold text-slate-800">등록번호:</span> 31140202500096</p>
+                <p><span className="font-semibold text-slate-800">위치:</span> 울산 남구 화합로148번길 12 1층</p>
+              </div>
             </div>
-            <h3 className="text-base font-bold text-slate-900">중개사무소 정보</h3>
-            <p className="text-xs font-medium text-slate-600">상호: 이룬다부동산중개</p>
-            <p className="text-xs font-semibold text-slate-800">대표: 장혜경 대표 공인중개사</p>
-            <p className="text-xs font-semibold text-sky-700">개설등록번호: 31140202500096</p>
-            <p className="text-xs font-medium text-slate-600">주소: 울산 남구 화합로148번길 12 1층</p>
+            <div className="pt-2 border-t border-slate-100">
+              <p className="text-[11px] sm:text-xs font-semibold text-sky-800 bg-sky-50 p-2.5 rounded-xl border border-sky-200/70 text-center">
+                울산 상가·점포 및 아파트 매매/임대 전문
+              </p>
+            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-3">
-            <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-2xl flex items-center justify-center font-bold border border-amber-200">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-amber-50 text-amber-800 rounded-2xl flex items-center justify-center font-bold border border-amber-200">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">등록 & 보증 보험</h3>
+                <p className="text-xs font-semibold text-sky-700 mt-0.5">개설등록번호: 31140202500096 (울산 남구청)</p>
+              </div>
+              <ul className="space-y-2 text-xs text-slate-700 pt-1">
+                <li className="flex items-start gap-1.5 font-bold text-slate-900">
+                  <span className="text-amber-500 shrink-0 font-black">•</span>
+                  <span>한국공인중개사협회 손해배상책임보증 2억원 가입</span>
+                </li>
+                <li className="flex items-start gap-1.5 font-semibold text-slate-800">
+                  <span className="text-amber-500 shrink-0 font-black">•</span>
+                  <span>계약 체결 즉시 법적 효력 공제증서 교부</span>
+                </li>
+                <li className="flex items-start gap-1.5 font-medium text-slate-600">
+                  <span className="text-amber-500 shrink-0 font-black">•</span>
+                  <span>소중한 보증금과 권리금, 매매대금까지</span>
+                </li>
+              </ul>
             </div>
-            <h3 className="text-base font-bold text-slate-900">등록 & 보증 보험</h3>
-            <p className="text-xs font-semibold text-slate-800">개설등록번호: 31140202500096</p>
-            <p className="text-xs font-medium text-slate-600">울산 남구청 정식 개설 등록 업소</p>
-            <p className="text-xs font-medium text-slate-600">100% 부동산 손해배상 보증보험 가입업소</p>
+            <div className="pt-2 border-t border-slate-100">
+              <p className="text-[11px] sm:text-xs font-extrabold text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-200/80 text-center leading-relaxed">
+                대표 공인중개사가 단 1%의 리스크 없이 안전하게 지켜드립니다.
+              </p>
+            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-3">
-            <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center font-bold border border-emerald-200">
-              <Clock className="w-5 h-5" />
+          <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/90 shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-3">
+              <div className="w-10 h-10 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center font-bold border border-emerald-200">
+                <Clock className="w-5 h-5" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900">영업시간 안내</h3>
+              <div className="space-y-1.5 text-xs text-slate-600">
+                <p><span className="font-semibold text-slate-800">평일 / 토요일:</span> 09:00 ~ 19:00</p>
+                <p><span className="font-semibold text-slate-800">일요일 / 공휴일:</span> 사전 예약제 현장 안내</p>
+                <p><span className="font-semibold text-slate-800">대표 전화:</span> 010-2772-1719</p>
+                <p><span className="font-semibold text-slate-800">온라인 문의:</span> 365일 24시간 간편 접수</p>
+              </div>
             </div>
-            <h3 className="text-base font-bold text-slate-900">영업시간 안내</h3>
-            <p className="text-xs font-medium text-slate-600">평일/토요일: 09:00 ~ 19:00</p>
-            <p className="text-xs font-medium text-slate-600">일요일/공휴일: 예약제 현장 안내</p>
+            <div className="pt-2 border-t border-slate-100">
+              <a
+                href={process.env.NEXT_PUBLIC_KAKAO_CHAT_URL || 'https://open.kakao.com/o/sGpdIfki'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-[11px] sm:text-xs font-extrabold text-slate-950 bg-[#FEE500] hover:bg-[#FDD835] p-2.5 rounded-xl border border-amber-300 text-center transition-all shadow-sm"
+              >
+                카카오톡 1:1 상담 바로가기
+              </a>
+            </div>
           </div>
         </div>
       </div>
