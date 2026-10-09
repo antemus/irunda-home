@@ -81,7 +81,7 @@ export default function Footer() {
               </p>
               <p className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-sky-400 shrink-0" />
-                영업시간: 평일/토요일 09:00 ~ 19:00
+                영업시간: 평일/토요일 09:00 ~ 19:00 (시간외 전화·카톡 상담 가능)
               </p>
             </div>
           </div>

@@ -181,6 +181,10 @@ export default function AboutPage() {
               <div className="space-y-1.5 text-xs text-slate-600">
                 <p><span className="font-semibold text-slate-800">평일 / 토요일:</span> 09:00 ~ 19:00</p>
                 <p><span className="font-semibold text-slate-800">일요일 / 공휴일:</span> 사전 예약제 현장 안내</p>
+                <p className="font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200/80 inline-flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  영업시간외 전화 및 카톡상담 가능
+                </p>
                 <p><span className="font-semibold text-slate-800">대표 전화:</span> 010-2772-1719</p>
                 <p><span className="font-semibold text-slate-800">온라인 문의:</span> 365일 24시간 간편 접수</p>
               </div>
