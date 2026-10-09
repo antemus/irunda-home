@@ -1350,12 +1350,9 @@ function MarketAptContent() {
         </div>
 
         {/* 6. Footer Disclaimer */}
-        <div className="text-center text-[11px] text-slate-600 py-3 space-y-1">
+        <div className="text-center text-[11px] text-slate-600 py-3">
           <p>
             데이터 출처: 국토교통부 실거래가 공개시스템 ({tradeType === 'trade' ? '아파트 매매' : '아파트 전·월세'} 자료제공서비스)
-          </p>
-          <p>
-            이룬다공인중개사사무소 | 대표: 장혜경 | 울산광역시 남구 신정동
           </p>
         </div>
       </main>
